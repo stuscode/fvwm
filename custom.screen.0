@@ -1,0 +1,9 @@
+#special for screen 0
+
+#only needs to happen on one screen
+# Init Function
+#
+DestroyFunc InitFunction
+AddToFunc InitFunction
++ I Exec exec /usr/bin/xscreensaver -no-splash
+

@@ -1,0 +1,141 @@
+#
+#Lock screen Menu
+#
+#Module FvwmDebug -xc
+DestroyMenu MenuWinKey
+AddToMenu MenuWinKey "WinKey" Title
++ "&Lock" Exec exec /usr/bin/xscreensaver-command -lock
++ "&Terminal" Exec exec xterm
++ "pager" CreateSwitchPanel
+
+Style FvwmPager Sticky, StaysOnTop
+*FvwmPager: Rows       1
+*FvwmPager: Columns    1
+Mouse 3 R C Module FvwmPager -transient *
+
+Silent Key Super_R A A Menu MenuWinKey
+Silent Key Super_L A A Menu MenuWinKey
+#Silent Key Super_R A A Exec exec echo $[screen] > ~/screennum
+Silent Key Print A A Exec xwd -id $w -out /tmp/screenshot.xwd
+
+Silent Key Control_L R N CreateSwitchPanel
+
+#todo: when starting firefox: start program, sleep 3, reposition window to here
+DestroyFunc Forcewindowhere
+AddtoFunc Forcewindowhere
++ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
++ I Schedule 1000 GotoDesk 0 $[desk.n]
+
+#page and desktop switcher
+Style SwitcherPanel sticky
+Style PermSwitcherPanel sticky
+#Style firefox !UsePPosition !UseUSPosition
+#Style *Firefox* InitialMapCommand MoveToDesk 0 $[desk.n]
+Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
+#Style Gecko !UsePPosition !UseUSPosition
+#Style *Firefox* StartsOnPage 1 0,SkipMapping, NoPPosition, NoUSPosition, ManualPlacement
+#Style SwitcherPanel NoPPosition
+#Style SwitcherPanel NoUSPosition
+Style SwitcherPanel ManualPlacement
+#BugOpts ExplainWindowPlacement True
+
+#Specific window options
+Style asclock NoTitle, Sticky
+
+DestroyModuleConfig SWPager
+#*SWPager: NoSeparators
+
+DestroyFunc CreateSwitchPanel
+AddToFunc   CreateSwitchPanel
+#+ I KillModule FvwmPager SWPager
++ I KillModule FvwmButtons SwitcherPanel
+#+ I KillModule FvwmPager
++ I DestroyModuleConfig SwitcherPanel:*
++ I *SwitcherPanel: Geometry 120x120+$[pointer.x]+$[pointer.y]
++ I *SwitcherPanel: Colorset 10
++ I *SwitcherPanel: Columns 120
++ I *SwitcherPanel: Rows 110
++ I *SwitcherPanel: Frame 0
++ I *SwitcherPanel: (120x5, Frame 0)
++ I *SwitcherPanel: (10x20, Frame 0)
++ I *SwitcherPanel: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset $[colorD0], ActiveColorset 12, Frame 0)
++ I *SwitcherPanel: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset $[colorD1], ActiveColorset 12, Frame 0)
++ I *SwitcherPanel: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset $[colorD2], ActiveColorset 12, Frame 0)
++ I *SwitcherPanel: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset $[colorD3], ActiveColorset 12, Frame 0)
++ I *SwitcherPanel: (10x20, Frame 0)
++ I *SwitcherPanel: (5x80, Frame 0)
++ I *SwitcherPanel: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) SWPager 'Module FvwmPager SWPager *' , Frame 0)
++ I *SwitcherPanel: (5x80, Frame 0)
++ I *SwitcherPanel: (120x5, Frame 0)
++ I Module FvwmButtons SwitcherPanel
+
+DestroyFunc CreatePermSwitchPanel
+AddToFunc   CreatePermSwitchPanel
++ I KillModule FvwmButtons PermSwitcherPanel
++ I DestroyModuleConfig PermSwitcherPanel:*
++ I *PermSwitcherPanel: Geometry 120x120-0+0@g
++ I *PermSwitcherPanel: Colorset 10
++ I *PermSwitcherPanel: Columns 120
++ I *PermSwitcherPanel: Rows 110
++ I *PermSwitcherPanel: Frame 0
+#+ I *PermSwitcherPanel: Font "none"
++ I *PermSwitcherPanel: (120x5, Frame 0)
++ I *PermSwitcherPanel: (10x20, Frame 0)
++ I *PermSwitcherPanel: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset $[colorD0], ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset $[colorD1], ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset $[colorD2], ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset $[colorD3], ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel: (10x20, Frame 0)
++ I *PermSwitcherPanel: (5x80, Frame 0)
++ I *PermSwitcherPanel: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) SWPager 'Module FvwmPager SWPager *' , Frame 0)
++ I *PermSwitcherPanel: (5x80, Frame 0)
++ I *PermSwitcherPanel: (120x5, Frame 0)
++ I Module FvwmButtons PermSwitcherPanel
+
+#$[desk.n]
+
+Key Right A CM GotoDesk 1 0 3
+Key Left  A CM GotoDesk -1 0 3
+Key Down A CM GotoRight
+Key Up   A CM GotoLeft
+
+DestroyFunc GotoLeft
+AddToFunc GotoLeft
++ I PipeRead '\
+   maxpagex=1;\
+   maxpagey=1;\
+   if [ $[page.nx] -eq 0 ]; then\
+      destx=$((maxpagex));\
+      if [ $[page.ny] -eq 0 ]; then\
+         desty=$((maxpagey));\
+      else\
+         desty=$(($[page.ny]-1));\
+      fi;\
+   else\
+      destx=$(($[page.nx]-1));\
+      desty=$(($[page.ny]));\
+   fi;\
+   echo GotoDeskAndPage $[desk.n] $((destx)) $((desty))'
+
+DestroyFunc GotoRight
+AddToFunc GotoRight
++ I PipeRead '\
+   maxpagex=1;\
+   maxpagey=1;\
+   if [ $[page.nx] -eq $((maxpagex)) ]; then\
+      destx=0;\
+      if [ $[page.ny] -eq $((maxpagey)) ]; then\
+         desty=0;\
+      else\
+         desty=$(($[page.ny]+1));\
+      fi;\
+   else\
+      destx=$(($[page.nx]+1));\
+      desty=$(($[page.ny]));\
+   fi;\
+   echo GotoDeskAndPage $[desk.n] $((destx)) $((desty))'
+
+
+
+
+Read custom.screen.$[screen]

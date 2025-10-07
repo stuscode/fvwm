@@ -1,0 +1,45 @@
+# Firefox Starting
+DestroyMenu MenuFirefox
+AddToMenu MenuFirefox "Firefox" Title
++ "bank" Exec exec /usr/bin/firefox --new-instance -P bank
++ "google" Exec exec /usr/bin/firefox --new-instance -P google
++ "amazon" Exec exec /usr/bin/firefox --new-instance -P amazon
++ "other logins" Exec exec /usr/bin/firefox --new-instance -P otherlogins
++ "nomem" Exec exec /usr/local/bin/start_firefox_nomem nomem
++ "no mem with mem" Exec exec /usr/bin/firefox --new-instance -P nomem
++ "short term nomem" Exec exec /usr/local/bin/start_firefox_nomem stnomem
++ "short term nomem with mem" Exec exec /usr/bin/firefox --new-instance -P stnomem
++ "facebookhotmail" Exec exec /usr/bin/firefox --new-instance -P facebookhotmail
++ "facebookgmail" Exec exec /usr/bin/firefox --new-instance -P facebookgmail
++ "mail-mil" Exec exec /usr/bin/firefox --new-instance -P mail-mil
++ "herb" Exec exec /usr/bin/firefox --new-instance -P herb
++ "profile" Exec exec /usr/bin/firefox -ProfileManager
+
+#make new browser:
+#cp -rp ~/ssd/browserdirs/firefox/default to ~/ssd/browserdirs/firefox/name
+#add line: /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox name
+DestroyMenu MenuNSFirefox
+AddToMenu MenuNSFirefox "NSFirefox" Title
++ "bank" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox bank
++ "google" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox google
++ "amazon" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox amazon
++ "twitter" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox twitter
++ "other logins" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox otherlogins
++ "nomem" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox nomem
++ "no mem with mem" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox nomem
++ "short term nomem" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox stnomem
++ "short term nomem with mem" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox stnomem
++ "facebookhotmail" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox facebookhotmail
++ "facebookgmail" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox facebookgmail
++ "default" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox default
+
+
+DestroyMenu MenuNSChrome
+AddToMenu MenuNSChrome "NSChrome" Title
++ "nomem" Exec exec /usr/local/bin/start_browser -r chrome ~/ssd/browserdirs/chrome nomem
++ "no mem with mem" Exec exec /usr/local/bin/start_browser chrome ~/ssd/browserdirs/chrome nomem
+
+DestroyMenu MenuNSBrave
+AddToMenu MenuNSBrave "NSBrave" Title
++ "nomem" Exec exec /usr/local/bin/start_browser -r brave ~/ssd/browserdirs/brave nomem
++ "no mem with mem" Exec exec /usr/local/bin/start_browser brave ~/ssd/browserdirs/brave nomem

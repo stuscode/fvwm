@@ -1,0 +1,20 @@
+#special for screen 1
+
+Exec exec sh setenv DISPLAY :0.1
+#Exec exec sh -c export DISPLAY=:0.1 xterm
+#Exec exec DISPLAY=:0.1
+
+#Silent Key Super_R A A Exec exec echo $[screen] > ~/screennum
+
+#DestroyMenu screen1menu
+#AddToMenu screen1menu $[screen] Title
+#+ "&Loopy" Exec exec export DISPLAY=:0.1
+#+ "&Terminal" Exec exec xterm
+#
+#Silent Key Super_R A A Menu screen1menu
+
+#This is started for each screen  TODO: collapse together into custom
+DestroyFunc InitFunction
+AddToFunc InitFunction
++ I Exec exec /usr/bin/asclock -position -5-10
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd /home/stew/SyncDir/software
+xterm -geometry 80x79+0+0&
+xterm -geometry 80x79+494+0&
+xterm -geometry 80x79+988+0&
+xterm -geometry 80x79+1482+0&
+xterm -geometry 80x79+1976+0&
+xterm -geometry 80x79+2470+0&
+xterm -geometry 80x79+2964+0&

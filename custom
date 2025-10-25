@@ -21,17 +21,17 @@ Silent Key Print A A Exec xwd -id $w -out /tmp/screenshot.xwd
 Silent Key Control_L R N CreateSwitchPanel
 
 #todo: when starting firefox: start program, sleep 3, reposition window to here
-DestroyFunc Forcewindowhere
-AddtoFunc Forcewindowhere
-+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
-+ I Schedule 1000 GotoDesk 0 $[desk.n]
+####DestroyFunc Forcewindowhere
+####AddtoFunc Forcewindowhere
+####+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
+####+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
 #page and desktop switcher
 Style SwitcherPanel sticky
 Style PermSwitcherPanel sticky
 #Style firefox !UsePPosition !UseUSPosition
 #Style *Firefox* InitialMapCommand MoveToDesk 0 $[desk.n]
-Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
+####Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
 #Style Gecko !UsePPosition !UseUSPosition
 #Style *Firefox* StartsOnPage 1 0,SkipMapping, NoPPosition, NoUSPosition, ManualPlacement
 #Style SwitcherPanel NoPPosition

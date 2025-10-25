@@ -67,6 +67,7 @@ AddToFunc   StartFunction
 + I Test (Init) Module FvwmBanner
 #+ I Module FvwmButtons RightPanel
 + I Module FvwmEvent EventNewDesk
++ I Module FvwmEvent EventNameBrowser
 + I InitDeskColors  #set the colors
 + I CreatePermSwitchPanel
 + I Test (Init) Exec exec /usr/bin/asclock -position -137+0
@@ -332,9 +333,9 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 + "&XTerm%icons/terminal.png%" Exec exec $[infostore.terminal]
 + "Gnome Terminal" Exec exec gnome-terminal
 #+ "&Firefox" Popup MenuFirefox
-+ "&NS Firefox" Popup MenuNSFirefox
-+ "&NS Chrome" Popup MenuNSChrome
-+ "&NS Brave" Popup MenuNSBrave
++ "&NS Firefox" Popup MenuNameNSFirefox
++ "&NS Chrome" Popup MenuNameNSChrome
++ "&NS Brave" Popup MenuNameNSBrave
 + "" Nop
 + "SwitchPanel" CreateSwitchPanel
 + "AllDesktop" Module FvwmPager 0 3

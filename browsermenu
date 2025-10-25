@@ -33,13 +33,101 @@ AddToMenu MenuNSFirefox "NSFirefox" Title
 + "facebookgmail" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox facebookgmail
 + "default" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox default
 
+#Usage: LaunchFF browsertype instancename [keep|erase] 
+#keep or erase specifies the profile to be kept or renewed
+DestroyFunc LaunchFF
+AddToFunc LaunchFF
++ I Echo LaunchFF $0 $1 $2
+#save the name of the currently launching browser to tie to the window
++ I InfoStoreAdd browserlaunch $1 
++ I InfoStoreAdd start_erase $2
+#launch.  The new window event will catch it and save the name
++ I Test (EnvMatch infostore.start_erase erase) Exec exec /usr/local/bin/start_browser -r $0 ~/ssd/browserdirs/$0 $1
++ I Test (EnvMatch infostore.start_erase keep) Exec exec /usr/local/bin/start_browser $0 ~/ssd/browserdirs/$0 $1
++ I InfoStoreRemove start_erase
+
+DestroyMenu MenuNameNSFirefox
+AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
++ "bank" LaunchFF firefox "bank" keep
++ "google" LaunchFF firefox "google" keep
++ "amazon" LaunchFF firefox "amazon" keep
++ "twitter" LaunchFF firefox "twitter" keep
++ "other logins" LaunchFF firefox "otherlogins" keep
++ "nomem" LaunchFF firefox "nomem" erase
++ "nomem with mem" LaunchFF firefox "nomem" keep
++ "short term nomem" LaunchFF firefox "stnomem" erase
++ "short term nomem with mem" LaunchFF firefox "stnomem" keep
++ "facebookhotmail" LaunchFF firefox "facebookhotmail" keep
++ "facebookgmail" LaunchFF firefox "facebookgmail" keep
++ "default" LaunchFF firefox "default" keep
++ "new default" LaunchFF firefox "default" erase
+
+DestroyMenu MenuNameNSChrome
+AddToMenu MenuNameNSChrome "NameNSChrome" Title
++ "nomem" LaunchFF chrome "nomem" erase
++ "no mem with mem" LaunchFF chrome "nomem" keep
 
 DestroyMenu MenuNSChrome
 AddToMenu MenuNSChrome "NSChrome" Title
 + "nomem" Exec exec /usr/local/bin/start_browser -r chrome ~/ssd/browserdirs/chrome nomem
 + "no mem with mem" Exec exec /usr/local/bin/start_browser chrome ~/ssd/browserdirs/chrome nomem
 
+DestroyMenu MenuNameNSBrave
+AddToMenu MenuNameNSBrave "NameNSBrave" Title
++ "nomem" LaunchFF brave "nomem" erase
++ "no mem with mem" LaunchFF brave "nomem" keep
+
 DestroyMenu MenuNSBrave
 AddToMenu MenuNSBrave "NSBrave" Title
 + "nomem" Exec exec /usr/local/bin/start_browser -r brave ~/ssd/browserdirs/brave nomem
 + "no mem with mem" Exec exec /usr/local/bin/start_browser brave ~/ssd/browserdirs/brave nomem
+
+DestroyModuleConfig EventNameBrowser:*
+*EventNameBrowser: Cmd Function
+*EventNameBrowser: add_window BrowserSaveName
+*EventNameBrowser: window_name BrowserChangeName
+
+DestroyFunc BrowserChangeName
+AddToFunc   BrowserChangeName
++ I Echo BrowserChangeName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I ThisWindow ("firefox") BrowserUseName
++ I ThisWindow ("Brave-browser") BrowserUseName
++ I ThisWindow ("Google-chrome") BrowserUseName
+
+DestroyFunc BrowserUseName
+AddToFunc   BrowserUseName
++ I Echo BrowserUseName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
+#Make sure infostore has the info for this window
++ I Test (!EnvIsSet $[infostore.browsername-$[w.id]]) Break
++ I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
++ I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
+#+ I SetEnv Icontestname $[w.iconname]
+#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) Echo one: $[w.iconname]
+#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) Echo two: $[infostore.browsername-$[w.id]]
+#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
+#+ I UnsetEnv Icontestname
+
+
+DestroyFunc BrowserSaveName
+AddToFunc   BrowserSaveName
++ I Echo BrowserSaveName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I ThisWindow ("firefox") BrowserDoSave
++ I ThisWindow ("Brave-browser") BrowserDoSave
++ I ThisWindow ("Google-chrome") BrowserDoSave
+
+DestroyFunc BrowserDoSave
+AddToFunc   BrowserDoSave
++ I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I InfoStoreAdd browsername-$[w.id] $[infostore.browserlaunch]
++ I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
++ I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
+
+#firefox startup
+#todo: when starting firefox: start program, sleep 3, reposition window to here
+DestroyFunc Forcewindowhere
+AddtoFunc Forcewindowhere
++ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
++ I Schedule 1000 GotoDesk 0 $[desk.n]
+
+Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
+

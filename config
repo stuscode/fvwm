@@ -387,7 +387,7 @@ Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
 + "File Browser" Exec exec nemo
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec /home/stew/.fvwm/start_prog_env
++ "Programming" Exec exec /home/stew/.fvwm/launchterms.py
 + "MSmove" Exec exec /home/stew/SyncDir/software/msmove/msmove.dist ~/Downloads ~/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "Screenshot area" Exec exec /usr/bin/flameshot gui

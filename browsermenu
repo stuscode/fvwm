@@ -1,43 +1,10 @@
 # Firefox Starting
-DestroyMenu MenuFirefox
-AddToMenu MenuFirefox "Firefox" Title
-+ "bank" Exec exec /usr/bin/firefox --new-instance -P bank
-+ "google" Exec exec /usr/bin/firefox --new-instance -P google
-+ "amazon" Exec exec /usr/bin/firefox --new-instance -P amazon
-+ "other logins" Exec exec /usr/bin/firefox --new-instance -P otherlogins
-+ "nomem" Exec exec /usr/local/bin/start_firefox_nomem nomem
-+ "no mem with mem" Exec exec /usr/bin/firefox --new-instance -P nomem
-+ "short term nomem" Exec exec /usr/local/bin/start_firefox_nomem stnomem
-+ "short term nomem with mem" Exec exec /usr/bin/firefox --new-instance -P stnomem
-+ "facebookhotmail" Exec exec /usr/bin/firefox --new-instance -P facebookhotmail
-+ "facebookgmail" Exec exec /usr/bin/firefox --new-instance -P facebookgmail
-+ "mail-mil" Exec exec /usr/bin/firefox --new-instance -P mail-mil
-+ "herb" Exec exec /usr/bin/firefox --new-instance -P herb
-+ "profile" Exec exec /usr/bin/firefox -ProfileManager
 
-#make new browser:
-#cp -rp ~/ssd/browserdirs/firefox/default to ~/ssd/browserdirs/firefox/name
-#add line: /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox name
-DestroyMenu MenuNSFirefox
-AddToMenu MenuNSFirefox "NSFirefox" Title
-+ "bank" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox bank
-+ "google" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox google
-+ "amazon" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox amazon
-+ "twitter" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox twitter
-+ "other logins" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox otherlogins
-+ "nomem" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox nomem
-+ "no mem with mem" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox nomem
-+ "short term nomem" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox stnomem
-+ "short term nomem with mem" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox stnomem
-+ "facebookhotmail" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox facebookhotmail
-+ "facebookgmail" Exec exec /usr/local/bin/start_browser firefox ~/ssd/browserdirs/firefox facebookgmail
-+ "default" Exec exec /usr/local/bin/start_browser -r firefox ~/ssd/browserdirs/firefox default
-
-#Usage: LaunchFF browsertype instancename [keep|erase] 
+#Usage: LaunchWeb browsertype instancename [keep|erase] 
 #keep or erase specifies the profile to be kept or renewed
-DestroyFunc LaunchFF
-AddToFunc LaunchFF
-+ I Echo LaunchFF $0 $1 $2
+DestroyFunc LaunchWeb
+AddToFunc LaunchWeb
++ I Echo LaunchWeb $0 $1 $2
 #save the name of the currently launching browser to tie to the window
 + I InfoStoreAdd browserlaunch $1 
 + I InfoStoreAdd start_erase $2
@@ -48,39 +15,31 @@ AddToFunc LaunchFF
 
 DestroyMenu MenuNameNSFirefox
 AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
-+ "bank" LaunchFF firefox "bank" keep
-+ "google" LaunchFF firefox "google" keep
-+ "amazon" LaunchFF firefox "amazon" keep
-+ "twitter" LaunchFF firefox "twitter" keep
-+ "other logins" LaunchFF firefox "otherlogins" keep
-+ "nomem" LaunchFF firefox "nomem" erase
-+ "nomem with mem" LaunchFF firefox "nomem" keep
-+ "short term nomem" LaunchFF firefox "stnomem" erase
-+ "short term nomem with mem" LaunchFF firefox "stnomem" keep
-+ "facebookhotmail" LaunchFF firefox "facebookhotmail" keep
-+ "facebookgmail" LaunchFF firefox "facebookgmail" keep
-+ "default" LaunchFF firefox "default" keep
-+ "new default" LaunchFF firefox "default" erase
++ "bank" LaunchWeb firefox "bank" keep
++ "google" LaunchWeb firefox "google" keep
++ "amazon" LaunchWeb firefox "amazon" keep
++ "twitter" LaunchWeb firefox "twitter" keep
++ "other logins" LaunchWeb firefox "otherlogins" keep
++ "nomem" LaunchWeb firefox "nomem" erase
++ "nomem with mem" LaunchWeb firefox "nomem" keep
++ "short term nomem" LaunchWeb firefox "stnomem" erase
++ "short term nomem with mem" LaunchWeb firefox "stnomem" keep
++ "facebookhotmail" LaunchWeb firefox "facebookhotmail" keep
++ "facebookgmail" LaunchWeb firefox "facebookgmail" keep
++ "default" LaunchWeb firefox "default" keep
++ "new default" LaunchWeb firefox "default" erase
++ "gdad" LaunchWeb firefox "gdad" keep
++ "workmail" LaunchWeb firefox "workmail" keep
 
 DestroyMenu MenuNameNSChrome
 AddToMenu MenuNameNSChrome "NameNSChrome" Title
-+ "nomem" LaunchFF chrome "nomem" erase
-+ "no mem with mem" LaunchFF chrome "nomem" keep
-
-DestroyMenu MenuNSChrome
-AddToMenu MenuNSChrome "NSChrome" Title
-+ "nomem" Exec exec /usr/local/bin/start_browser -r chrome ~/ssd/browserdirs/chrome nomem
-+ "no mem with mem" Exec exec /usr/local/bin/start_browser chrome ~/ssd/browserdirs/chrome nomem
++ "nomem" LaunchWeb chrome "nomem" erase
++ "no mem with mem" LaunchWeb chrome "nomem" keep
 
 DestroyMenu MenuNameNSBrave
 AddToMenu MenuNameNSBrave "NameNSBrave" Title
-+ "nomem" LaunchFF brave "nomem" erase
-+ "no mem with mem" LaunchFF brave "nomem" keep
-
-DestroyMenu MenuNSBrave
-AddToMenu MenuNSBrave "NSBrave" Title
-+ "nomem" Exec exec /usr/local/bin/start_browser -r brave ~/ssd/browserdirs/brave nomem
-+ "no mem with mem" Exec exec /usr/local/bin/start_browser brave ~/ssd/browserdirs/brave nomem
++ "nomem" LaunchWeb brave "nomem" erase
++ "no mem with mem" LaunchWeb brave "nomem" keep
 
 DestroyModuleConfig EventNameBrowser:*
 *EventNameBrowser: Cmd Function
@@ -123,11 +82,22 @@ AddToFunc   BrowserDoSave
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
 
 #firefox startup
+
+DestroyFunc MoveWindowLoc
+AddtoFunc MoveWindowLoc
++ I WindowId $0 MoveToDesk 0 $1
++ I WindowId $0 MoveToPage $2 $3
++ I WindowId $0 MoveToScreen $4
++ I Schedule 200 GotoDesk 0 $1
+
 #todo: when starting firefox: start program, sleep 3, reposition window to here
 DestroyFunc Forcewindowhere
 AddtoFunc Forcewindowhere
-+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
-+ I Schedule 1000 GotoDesk 0 $[desk.n]
++ I Echo Forcewindowhere $0 $1 $2 $3 $4
++ I Schedule 800 MoveWindowLoc $0 $1 $2 $3 $4
+###+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
+###+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
-Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
+#Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
+Style firefox InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
 

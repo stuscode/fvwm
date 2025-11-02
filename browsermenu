@@ -94,14 +94,13 @@ AddtoFunc MoveWindowLoc
 + I WindowId $0 MoveToScreen $4
 + I Schedule 200 GotoDesk 0 $1
 
-#todo: when starting firefox: start program, sleep 3, reposition window to here
+#todo: when starting firefox: start program, sleep until it moves itself, reposition window to here
 DestroyFunc Forcewindowhere
 AddtoFunc Forcewindowhere
-+ I Echo Forcewindowhere $0 $1 $2 $3 $4
 + I Schedule 800 MoveWindowLoc $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
 ###+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
 ###+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
 #Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
-Style firefox InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
+Style firefox InitialMapCommand Forcewindowhere
 

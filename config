@@ -60,17 +60,20 @@ InfoStoreAdd terminal xterm
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 #+ I Test (Init) Exec exec /home/stew/bin/setup_notmycomputer.randr
+   #turn on logging
++ I Test (Init) Exec exec /usr/bin/pkill -USR2 fvwm3 
 + I Test (Init, f $[FVWM_USERDIR]/.BGdefault) \
     Exec exec fvwm-root $[FVWM_USERDIR]/.BGdefault
 + I TestRc (NoMatch) Exec exec fvwm-root \
     $[FVWM_DATADIR]/default-config/images/background/bg1.png
 + I Test (Init) Module FvwmBanner
++ I Test (Init) Exec exec /usr/bin/xscreensaver -no-splash
 #+ I Module FvwmButtons RightPanel
 + I Module FvwmEvent EventNewDesk
 + I Module FvwmEvent EventNameBrowser
 + I InitDeskColors  #set the colors
 + I CreatePermSwitchPanel
-+ I Test (Init) Exec exec /usr/bin/asclock -position -137+0
++ I Test (Init) Exec exec /usr/bin/asclock -position -0+148
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -264,7 +267,7 @@ Style * BorderColorset 3, HilightBorderColorset 4
 # Disable Icons from appearing on desktop.
 # Comment this out or use Style * Icon to get the icons back.
 ###Style * !Icon
-Style * IconBox -35 148 -1 -1, IconFill right top
+Style * IconBox -35 226 -1 -1, IconFill right top
 
 # Window Specific Styles
 Style RightPanel !Title, !Borders, !Handles, Sticky, \
@@ -387,7 +390,7 @@ Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
 + "File Browser" Exec exec nemo
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec /home/stew/.fvwm/launchterms.py
++ "Programming" Exec exec /home/stew/.fvwm/scripts/launchterms.py
 + "MSmove" Exec exec /home/stew/SyncDir/software/msmove/msmove.dist ~/Downloads ~/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "Screenshot area" Exec exec /usr/bin/flameshot gui
@@ -417,6 +420,26 @@ AddToMenu   MenuWindowOps
 + "Close"     Close
 + "More..."   Menu MenuWindowOpsLong This 0 0
 
+DestroyFunc DebugLocation
+AddToFunc DebugLocation
++ I Echo "desk.n page.nx page.ny monitor.current"
++ I Echo $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
+
+DestroyMenu MenuPrintInfo
+AddToMenu   MenuPrintInfo
++ "Colors"              PrintInfo Colors
++ "Colors verbose"      PrintInfo Colors 1
++ "ImageCache"          PrintInfo ImageCache
++ "ImageCache verbose"  PrintInfo ImageCache 1
++ "Locale"              PrintInfo Locale
++ "Locale 1"            PrintInfo Locale 1
++ "Locale 2"            PrintInfo Locale 2
++ "nls"                 PrintInfo nls
++ "bindings"            PrintInfo bindings
++ "infostore"           PrintInfo infostore
++ "debugLocation"       DebugLocation
+
+
 DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
 + "Move"                Move
@@ -438,6 +461,8 @@ AddToMenu   MenuWindowOpsLong
 + "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
 + "" Nop
 + "Identify"            Module FvwmIdent
++ "&PrintInfo" Popup MenuPrintInfo
+
 
 DestroyMenu MenuIconOps
 AddToMenu   MenuIconOps

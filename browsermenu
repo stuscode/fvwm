@@ -31,6 +31,7 @@ AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
 + "gdad" LaunchWeb firefox "gdad" keep
 + "workmail" LaunchWeb firefox "workmail" keep
 
+#TODO: fix name collision in nomem
 DestroyMenu MenuNameNSChrome
 AddToMenu MenuNameNSChrome "NameNSChrome" Title
 + "nomem" LaunchWeb chrome "nomem" erase
@@ -70,14 +71,16 @@ AddToFunc   BrowserUseName
 DestroyFunc BrowserSaveName
 AddToFunc   BrowserSaveName
 + I Echo BrowserSaveName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
-+ I ThisWindow ("firefox") BrowserDoSave
-+ I ThisWindow ("Brave-browser") BrowserDoSave
-+ I ThisWindow ("Google-chrome") BrowserDoSave
++ I ThisWindow ("firefox") BrowserDoSave "firefox"
++ I ThisWindow ("Brave-browser") BrowserDoSave "brave"
++ I ThisWindow ("Google-chrome") BrowserDoSave "chrome"
 
 DestroyFunc BrowserDoSave
 AddToFunc   BrowserDoSave
 + I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
-+ I InfoStoreAdd browsername-$[w.id] $[infostore.browserlaunch]
++ I PipeRead '~/.fvwm/scripts/getlatestbrowsertype.py $0'
++ I InfoStoreAdd browsername-$[w.id] $[infostore.WHICHBROWSER]
+#+ I InfoStoreAdd browsername-$[w.id] $[infostore.browserlaunch]
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
 
@@ -85,6 +88,7 @@ AddToFunc   BrowserDoSave
 
 DestroyFunc MoveWindowLoc
 AddtoFunc MoveWindowLoc
++ I Echo MoveWindowLoc $0 $1 $2 $3 $4
 + I WindowId $0 MoveToDesk 0 $1
 + I WindowId $0 MoveToPage $2 $3
 + I WindowId $0 MoveToScreen $4
@@ -94,7 +98,7 @@ AddtoFunc MoveWindowLoc
 DestroyFunc Forcewindowhere
 AddtoFunc Forcewindowhere
 + I Echo Forcewindowhere $0 $1 $2 $3 $4
-+ I Schedule 800 MoveWindowLoc $0 $1 $2 $3 $4
++ I Schedule 800 MoveWindowLoc $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
 ###+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
 ###+ I Schedule 1000 GotoDesk 0 $[desk.n]
 

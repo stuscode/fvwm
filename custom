@@ -138,4 +138,4 @@ AddToFunc GotoRight
 
 
 
-Read custom.screen.$[screen]
+#Read custom.screen.$[screen]

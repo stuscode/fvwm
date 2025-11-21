@@ -6,7 +6,7 @@ DestroyFunc LaunchWeb
 AddToFunc LaunchWeb
 + I Echo LaunchWeb $0 $1 $2
 #save the name of the currently launching browser to tie to the window
-+ I InfoStoreAdd browserlaunch $1 
+#+ I InfoStoreAdd browserlaunch $1 
 + I InfoStoreAdd start_erase $2
 #launch.  The new window event will catch it and save the name
 + I Test (EnvMatch infostore.start_erase erase) Exec exec /usr/local/bin/start_browser -r $0 ~/ssd/browserdirs/$0 $1
@@ -61,11 +61,6 @@ AddToFunc   BrowserUseName
 + I Test (!EnvIsSet $[infostore.browsername-$[w.id]]) Break
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
-#+ I SetEnv Icontestname $[w.iconname]
-#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) Echo one: $[w.iconname]
-#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) Echo two: $[infostore.browsername-$[w.id]]
-#+ I Test (!EnvMatch Icontestname $[infostore.browsername-$[w.id]]) WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
-#+ I UnsetEnv Icontestname
 
 
 DestroyFunc BrowserSaveName
@@ -80,7 +75,6 @@ AddToFunc   BrowserDoSave
 + I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
 + I PipeRead '~/.fvwm/scripts/getlatestbrowsertype.py $0'
 + I InfoStoreAdd browsername-$[w.id] $[infostore.WHICHBROWSER]
-#+ I InfoStoreAdd browsername-$[w.id] $[infostore.browserlaunch]
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
 
@@ -98,9 +92,5 @@ AddtoFunc MoveWindowLoc
 DestroyFunc Forcewindowhere
 AddtoFunc Forcewindowhere
 + I Schedule 800 MoveWindowLoc $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
-###+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
-###+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
-#Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
 Style firefox InitialMapCommand Forcewindowhere
-

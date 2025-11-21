@@ -387,7 +387,10 @@ AddToMenu   MenuPrograms "Programs" Title
 + "Virtualbox" Exec exec VirtualBox
 + "vuescan" Exec exec /opt/VueScan/vuescan
 Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
-+ "File Browser" Exec exec nemo
++ "Files: nemo" Exec exec nemo
++ "Files: thunar" Exec exec thunar
++ "Files: krusader" Exec exec krusader
++ "Files: pcmanfm" Exec exec pcmanfm
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
 + "Programming" Exec exec /home/stew/.fvwm/scripts/launchterms.py

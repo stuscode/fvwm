@@ -19,6 +19,8 @@ AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
 + "google" LaunchWeb firefox "google" keep
 + "amazon" LaunchWeb firefox "amazon" keep
 + "twitter" LaunchWeb firefox "twitter" keep
++ "instagram" LaunchWeb firefox "instagram" keep
++ "github" LaunchWeb firefox "github" keep
 + "other logins" LaunchWeb firefox "otherlogins" keep
 + "nomem" LaunchWeb firefox "nomem" erase
 + "nomem with mem" LaunchWeb firefox "nomem" keep
@@ -72,8 +74,8 @@ AddToFunc   BrowserSaveName
 
 DestroyFunc BrowserDoSave
 AddToFunc   BrowserDoSave
-+ I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
 + I PipeRead '~/.fvwm/scripts/getlatestbrowsertype.py $0'
++ I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]] $[infostore.WHICHBROWSER]
 + I InfoStoreAdd browsername-$[w.id] $[infostore.WHICHBROWSER]
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]

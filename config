@@ -61,6 +61,7 @@ DestroyFunc StartFunction
 AddToFunc   StartFunction
 #+ I Test (Init) Exec exec /home/stew/bin/setup_notmycomputer.randr
    #turn on logging
++ I Test (Restart) FvwmCommand "InfoStore load"
 + I Test (Init) Exec exec /usr/bin/pkill -USR2 fvwm3 
 + I Test (Init, f $[FVWM_USERDIR]/.BGdefault) \
     Exec exec fvwm-root $[FVWM_USERDIR]/.BGdefault
@@ -74,6 +75,11 @@ AddToFunc   StartFunction
 + I InitDeskColors  #set the colors
 + I CreatePermSwitchPanel
 + I Test (Init) Exec exec /usr/bin/asclock -position -0+148
+
+DestroyFunc ExitFunction
+AddToFunc   ExitFunction
++ I Test (ToRestart) FvwmCommand "InfoStore save"
+
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX

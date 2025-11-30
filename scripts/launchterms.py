@@ -8,16 +8,21 @@ from tkinter import filedialog
 
 DEFAULTPATH = "~/SyncDir/software"
 
-window = Tk()
 if len(sys.argv) > 1:
    path = sys.argv[1]
 else:
    path = DEFAULTPATH
-startpath = os.path.expanduser(path)
-os.chdir(startpath)
+directory = os.path.expanduser(path)
+try:
+   os.chdir(directory)
+except:
+   print("Couldn't chdir to: ",directory)
 directory = filedialog.askdirectory()
 if len(directory) > 0:
-   os.chdir(directory) 
+   try:
+      os.chdir(directory) 
+   except:
+      print("Couldn't chdir to selected: ",directory)
    subprocess.Popen(['xterm', '-geometry', '80x79+0+0'])
    subprocess.Popen(['xterm', '-geometry', '80x79+494+0'])
    subprocess.Popen(['xterm', '-geometry', '80x79+988+0'])

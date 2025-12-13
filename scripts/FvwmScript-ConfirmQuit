@@ -1,5 +1,5 @@
 WindowTitle {ConfirmQuit}
-WindowSize  300 80
+WindowSize  250 80
 Font "xft:Sans:style=Bold:size=10"
 Init
  Begin
@@ -23,7 +23,7 @@ Widget 2
 Property
  Title {Logout}
  Size 60 28
- Position 70 40
+ Position 43 40
  Flags NoReliefString
  Type PushButton
  Value 1
@@ -39,7 +39,7 @@ Widget 3
 Property
  Title {Cancel}
  Size 60 28
- Position 170 40
+ Position 147 40
  Flags NoReliefString
  Type PushButton
  Value 1

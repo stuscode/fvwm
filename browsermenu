@@ -9,8 +9,8 @@ AddToFunc LaunchWeb
 #+ I InfoStoreAdd browserlaunch $1 
 + I InfoStoreAdd start_erase $2
 #launch.  The new window event will catch it and save the name
-+ I Test (EnvMatch infostore.start_erase erase) Exec exec /usr/local/bin/start_browser -r $0 ~/ssd/browserdirs/$0 $1
-+ I Test (EnvMatch infostore.start_erase keep) Exec exec /usr/local/bin/start_browser $0 ~/ssd/browserdirs/$0 $1
++ I Test (EnvMatch infostore.start_erase erase) Exec exec /usr/local/bin/start_browser -r $0 ${HOME}/ssd/browserdirs/$0 $1
++ I Test (EnvMatch infostore.start_erase keep) Exec exec /usr/local/bin/start_browser $0 ${HOME}/ssd/browserdirs/$0 $1
 + I InfoStoreRemove start_erase
 
 DestroyMenu MenuNameNSFirefox
@@ -19,6 +19,7 @@ AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
 + "google" LaunchWeb firefox "google" keep
 + "amazon" LaunchWeb firefox "amazon" keep
 + "twitter" LaunchWeb firefox "twitter" keep
++ "twitter2" LaunchWeb firefox "twitter2" keep
 + "instagram" LaunchWeb firefox "instagram" keep
 + "github" LaunchWeb firefox "github" keep
 + "other logins" LaunchWeb firefox "otherlogins" keep
@@ -48,6 +49,7 @@ DestroyModuleConfig EventNameBrowser:*
 *EventNameBrowser: Cmd Function
 *EventNameBrowser: add_window BrowserSaveName
 *EventNameBrowser: window_name BrowserChangeName
+*EventNameBrowser: destroy_window BrowserDeleteName
 
 DestroyFunc BrowserChangeName
 AddToFunc   BrowserChangeName
@@ -64,6 +66,10 @@ AddToFunc   BrowserUseName
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
 
+DestroyFunc BrowserDeleteName
+AddToFunc   BrowserDeleteName
++ I Echo BrowserDeleteName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I InfoStoreRemove browsername-$[w.id] $[infostore.WHICHBROWSER]
 
 DestroyFunc BrowserSaveName
 AddToFunc   BrowserSaveName
@@ -74,7 +80,7 @@ AddToFunc   BrowserSaveName
 
 DestroyFunc BrowserDoSave
 AddToFunc   BrowserDoSave
-+ I PipeRead '~/.fvwm/scripts/getlatestbrowsertype.py $0'
++ I PipeRead '${HOME}/.fvwm/scripts/getlatestbrowsertype.py $0'
 + I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]] $[infostore.WHICHBROWSER]
 + I InfoStoreAdd browsername-$[w.id] $[infostore.WHICHBROWSER]
 + I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]

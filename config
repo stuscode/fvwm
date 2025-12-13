@@ -59,9 +59,10 @@ InfoStoreAdd terminal xterm
 # actions that are run after a restart.
 DestroyFunc StartFunction
 AddToFunc   StartFunction
-#+ I Test (Init) Exec exec /home/stew/bin/setup_notmycomputer.randr
+#+ I Test (Init) Exec exec ${HOME}/bin/setup_notmycomputer.randr
    #turn on logging
-+ I Test (Restart) FvwmCommand "InfoStore load"
+#+ I Module FvwmCommandS
+# this doesn't work despite what ai says: + I Test (Restart) InfoStore load
 + I Test (Init) Exec exec /usr/bin/pkill -USR2 fvwm3 
 + I Test (Init, f $[FVWM_USERDIR]/.BGdefault) \
     Exec exec fvwm-root $[FVWM_USERDIR]/.BGdefault
@@ -78,7 +79,7 @@ AddToFunc   StartFunction
 
 DestroyFunc ExitFunction
 AddToFunc   ExitFunction
-+ I Test (ToRestart) FvwmCommand "InfoStore save"
+# this doesn't work despite what ai says: + I Test (ToRestart) InfoStore save
 
 
 # Mouse Bindings Functions
@@ -382,9 +383,9 @@ AddToMenu   MenuPrograms "Programs" Title
 #Test (x xemacs) + "XEmacs" Exec exec xemacs
 #Test (x gimp) + "Gimp" Exec exec gimp
 #Test (x vlc) + "VLC" Exec exec vlc
-+ "gnucash" Exec exec /opt/gnucash/bin/gnucash /home/stew/SyncDir/Finance/BakerGnuCash/BakerFinances.gnucash
-+ "gnucash receipts" Exec exec /opt/gnucash/bin/gnucash /home/stew/SyncDir/Finance/BakerCreditCards/BakerCreditCard.gnucash
-+ "gnucash Dad" Exec exec /opt/gnucash/bin/gnucash /home/stew/SyncDir/Finance/HerbGnuCash/HerbFinances.gnucash
++ "gnucash" Exec exec /opt/gnucash/bin/gnucash ${HOME}/SyncDir/Finance/BakerGnuCash/BakerFinances.gnucash
++ "gnucash receipts" Exec exec /opt/gnucash/bin/gnucash ${HOME}/SyncDir/Finance/BakerCreditCards/BakerCreditCard.gnucash
++ "gnucash Dad" Exec exec /opt/gnucash/bin/gnucash ${HOME}/SyncDir/Finance/HerbGnuCash/HerbFinances.gnucash
 + "tightvnc" Exec exec java -jar /opt/xtightvncviewer/tightvnc-jviewer.jar
 + "" Nop
 + "seahorse" Exec exec /usr/bin/seahorse
@@ -399,8 +400,8 @@ Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
 + "Files: pcmanfm" Exec exec pcmanfm
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec /home/stew/.fvwm/scripts/launchterms.py
-+ "MSmove" Exec exec /home/stew/SyncDir/software/msmove/msmove.dist ~/Downloads ~/SyncDir/Finance/statements
++ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py
++ "MSmove" Exec exec ${HOME}/SyncDir/software/msmove/msmove.dist ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "Screenshot area" Exec exec /usr/bin/flameshot gui
 

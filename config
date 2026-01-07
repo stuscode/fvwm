@@ -34,6 +34,7 @@ Read browsermenu
 # that FvwmConsole uses. Change this to your terminal of choice
 #InfoStoreAdd terminal x-terminal-emulator
 InfoStoreAdd terminal xterm
+InfoStoreAdd envloc $[HOME]/.fvwm/envsave
 
 ###########
 # 1: Functions
@@ -62,8 +63,6 @@ AddToFunc   StartFunction
 #+ I Test (Init) Exec exec ${HOME}/bin/setup_notmycomputer.randr
    #turn on logging
 #+ I Module FvwmCommandS
-# this doesn't work despite what ai says: + I Test (Restart) InfoStore load
-+ I Test (Init) Exec exec /usr/bin/pkill -USR2 fvwm3 
 + I Test (Init, f $[FVWM_USERDIR]/.BGdefault) \
     Exec exec fvwm-root $[FVWM_USERDIR]/.BGdefault
 + I TestRc (NoMatch) Exec exec fvwm-root \
@@ -77,9 +76,16 @@ AddToFunc   StartFunction
 + I CreatePermSwitchPanel
 + I Test (Init) Exec exec /usr/bin/asclock -position -0+148
 
+DestroyFunc RestartFunction
+AddToFunc   RestartFunction
++ I Exec exec /usr/bin/pkill -USR2 fvwm3 
++ I PipeRead '$[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]'
++ I Echo $[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]
+
 DestroyFunc ExitFunction
 AddToFunc   ExitFunction
 # this doesn't work despite what ai says: + I Test (ToRestart) InfoStore save
++ I Test (ToRestart) Exec exec $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 
 
 # Mouse Bindings Functions

@@ -3,7 +3,6 @@
 import os
 import subprocess
 import sys
-from tkinter import *
 from tkinter import filedialog
 
 DEFAULTPATH = "~/SyncDir/software"

@@ -19,7 +19,6 @@ AddToMenu MenuNameNSFirefox "NameNSFirefox" Title
 + "google" LaunchWeb firefox "google" keep
 + "amazon" LaunchWeb firefox "amazon" keep
 + "twitter" LaunchWeb firefox "twitter" keep
-+ "twitter2" LaunchWeb firefox "twitter2" keep
 + "instagram" LaunchWeb firefox "instagram" keep
 + "github" LaunchWeb firefox "github" keep
 + "other logins" LaunchWeb firefox "otherlogins" keep
@@ -39,6 +38,7 @@ DestroyMenu MenuNameNSChrome
 AddToMenu MenuNameNSChrome "NameNSChrome" Title
 + "nomem" LaunchWeb chrome "nomem" erase
 + "no mem with mem" LaunchWeb chrome "nomem" keep
++ "twitter2" LaunchWeb chrome "twitter2" keep
 
 DestroyMenu MenuNameNSBrave
 AddToMenu MenuNameNSBrave "NameNSBrave" Title
@@ -53,27 +53,28 @@ DestroyModuleConfig EventNameBrowser:*
 
 DestroyFunc BrowserChangeName
 AddToFunc   BrowserChangeName
-+ I Echo BrowserChangeName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I Echo BrowserChangeName $[w.id] $[w.iconname] $[browsername-$[w.id]]
 + I ThisWindow ("firefox") BrowserUseName
 + I ThisWindow ("Brave-browser") BrowserUseName
 + I ThisWindow ("Google-chrome") BrowserUseName
 
 DestroyFunc BrowserUseName
 AddToFunc   BrowserUseName
-+ I Echo BrowserUseName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I Echo BrowserUseName $[w.id] $[w.iconname] $[browsername-$[w.id]]
 #Make sure infostore has the info for this window
-+ I Test (!EnvIsSet $[infostore.browsername-$[w.id]]) Break
-+ I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
-+ I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
++ I Test (!EnvIsSet $[browsername-$[w.id]]) Break
++ I Echo BrowserUseName2 $[w.id] $[w.iconname] $[browsername-$[w.id]]
++ I WindowStyle TitleFormat %c $[browsername-$[w.id]]
++ I WindowStyle IconTitleFormat %c $[browsername-$[w.id]]
 
 DestroyFunc BrowserDeleteName
 AddToFunc   BrowserDeleteName
-+ I Echo BrowserDeleteName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
-+ I InfoStoreRemove browsername-$[w.id] $[infostore.WHICHBROWSER]
++ I Echo BrowserDeleteName $[w.id] $[w.iconname] $[browsername-$[w.id]]
+#+ I unsetEnv browsername-$[w.id] 
 
 DestroyFunc BrowserSaveName
 AddToFunc   BrowserSaveName
-+ I Echo BrowserSaveName $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]]
++ I Echo BrowserSaveName $[w.id] $[w.iconname] $[browsername-$[w.id]]
 + I ThisWindow ("firefox") BrowserDoSave "firefox"
 + I ThisWindow ("Brave-browser") BrowserDoSave "brave"
 + I ThisWindow ("Google-chrome") BrowserDoSave "chrome"
@@ -81,10 +82,10 @@ AddToFunc   BrowserSaveName
 DestroyFunc BrowserDoSave
 AddToFunc   BrowserDoSave
 + I PipeRead '${HOME}/.fvwm/scripts/getlatestbrowsertype.py $0'
-+ I Echo BrowserDoSave $[w.id] $[w.iconname] $[infostore.browsername-$[w.id]] $[infostore.WHICHBROWSER]
-+ I InfoStoreAdd browsername-$[w.id] $[infostore.WHICHBROWSER]
-+ I WindowStyle TitleFormat %c $[infostore.browsername-$[w.id]]
-+ I WindowStyle IconTitleFormat %c $[infostore.browsername-$[w.id]]
++ I Echo BrowserDoSave $[w.id] $[w.iconname] $[browsername-$[w.id]] $[infostore.WHICHBROWSER]
++ I setEnv browsername-$[w.id] $[infostore.WHICHBROWSER]
++ I WindowStyle TitleFormat %c $[browsername-$[w.id]]
++ I WindowStyle IconTitleFormat %c $[browsername-$[w.id]]
 
 #firefox startup
 

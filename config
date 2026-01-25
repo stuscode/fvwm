@@ -86,6 +86,7 @@ DestroyFunc ExitFunction
 AddToFunc   ExitFunction
 # this doesn't work despite what ai says: + I Test (ToRestart) InfoStore save
 + I Test (ToRestart) Exec exec $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
++ I Test (ToRestart) Echo $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 
 
 # Mouse Bindings Functions
@@ -409,6 +410,7 @@ Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
 + "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py
 + "MSmove" Exec exec ${HOME}/SyncDir/software/msmove/msmove.dist ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
++ "gromit-mpx" Exec exec gromit-mpx
 + "Screenshot area" Exec exec /usr/bin/flameshot gui
 
 

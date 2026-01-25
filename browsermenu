@@ -62,7 +62,7 @@ DestroyFunc BrowserUseName
 AddToFunc   BrowserUseName
 + I Echo BrowserUseName $[w.id] $[w.iconname] $[browsername-$[w.id]]
 #Make sure infostore has the info for this window
-+ I Test (!EnvIsSet $[browsername-$[w.id]]) Break
++ I Test (!EnvIsSet browsername-$[w.id]) Break
 + I Echo BrowserUseName2 $[w.id] $[w.iconname] $[browsername-$[w.id]]
 + I WindowStyle TitleFormat %c $[browsername-$[w.id]]
 + I WindowStyle IconTitleFormat %c $[browsername-$[w.id]]

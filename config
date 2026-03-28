@@ -75,12 +75,14 @@ AddToFunc   StartFunction
 + I InitDeskColors  #set the colors
 + I CreatePermSwitchPanel
 + I Test (Init) Exec exec /usr/bin/asclock -position -0+148
+#+ I Test (Init) Exec exec /usr/local/bin/msmove -i -position -0+300
 
 DestroyFunc RestartFunction
 AddToFunc   RestartFunction
 + I Exec exec /usr/bin/pkill -USR2 fvwm3 
 + I PipeRead '$[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]'
 + I Echo $[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]
++ I RestartRenameBrowsers
 
 DestroyFunc ExitFunction
 AddToFunc   ExitFunction
@@ -111,6 +113,7 @@ DestroyFunc MoveToCurrent
 AddToFunc MoveToCurrent
 + I ThisWindow MoveToPage
 + I ThisWindow MoveToDesk
++ I ThisWindow Move pointer
 
 # Function: ViewManPage $0
 #
@@ -282,6 +285,8 @@ Style * BorderColorset 3, HilightBorderColorset 4
 # Comment this out or use Style * Icon to get the icons back.
 ###Style * !Icon
 Style * IconBox -35 226 -1 -1, IconFill right top
+#Style * IconBox screen DisplayPort-0 500x500+0+0@DisplayPort-0, IconFill right top
+#Style "msmove" Geometry 800x600+100+100@$[monitor.0.name]
 
 # Window Specific Styles
 Style RightPanel !Title, !Borders, !Handles, Sticky, \
@@ -365,6 +370,7 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 + "&Restart%icons/restart.png%" Restart
 + "Switch User" SwitchUser
 + "&Logout%icons/quit.png%" Module FvwmScript scripts/FvwmScript-ConfirmQuit
++ "backup&shutdown" Exec exec xterm -T backingup -e /bin/bash -ci ~/bin/backupandshutdown
 + "&Shutdown" Popup MenuShutdown
 
 # Generate XDGMenu
@@ -400,15 +406,16 @@ AddToMenu   MenuPrograms "Programs" Title
 + "" Nop
 + "Virtualbox" Exec exec VirtualBox
 + "vuescan" Exec exec /opt/VueScan/vuescan
-Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
-+ "Files: nemo" Exec exec nemo
-+ "Files: thunar" Exec exec thunar
-+ "Files: krusader" Exec exec krusader
-+ "Files: pcmanfm" Exec exec pcmanfm
+#Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
+#+ "Files: nemo" Exec exec nemo
+#+ "Files: thunar" Exec exec thunar
+#+ "Files: krusader" Exec exec krusader
++ "File Manager pcmanfm" Exec exec pcmanfm
++ "backintime" Exec exec /usr/bin/backintime-qt
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
 + "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py
-+ "MSmove" Exec exec ${HOME}/SyncDir/software/msmove/msmove.dist ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
++ "MSmove" Exec exec /usr/local/bin/msmove ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "gromit-mpx" Exec exec gromit-mpx
 + "Screenshot area" Exec exec /usr/bin/flameshot gui
@@ -441,7 +448,7 @@ AddToMenu   MenuWindowOps
 DestroyFunc DebugLocation
 AddToFunc DebugLocation
 + I Echo "desk.n page.nx page.ny monitor.current"
-+ I Echo $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
++ I Echo $[desk.n] $[page.nx] $[page.ny] $[monitor.current] $[monitor.1.name]
 
 DestroyMenu MenuPrintInfo
 AddToMenu   MenuPrintInfo
@@ -461,6 +468,7 @@ AddToMenu   MenuPrintInfo
 DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
 + "Move"                Move
++ "Move 0"    MoveToScreen $[monitor.0] 
 + "Resize"              Resize
 + "(De)Iconify"         Iconify
 + "(Un)Maximize"        Maximize
@@ -611,11 +619,66 @@ Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
 Mouse 3	R    N Menu MenuFvwmRoot
-Mouse 2	R    A WindowList
+Mouse 2	R    N WindowList 
+Mouse 2	R    C WindowList Function MoveToCurrent
+#Mouse 2	R    C Module FvwmWinList -Transient
+Mouse 2	R    C Module FvwmIconMan -Transient
 Mouse 1	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
+
+DestroyModuleConfig FvwmIconMan:*
+*FvwmIconMan: UseWinList True
+*FvwmIconMan: Action Mouse 0 N sendcommand MoveToDesk
+*FvwmIconMan: Action Mouse 3 N sendcommand Module FvwmIdent
+#*FvwmIconMan: ManagerGeometry 0x1
+*FvwmIconMan: ButtonGeometry 120x20
+
+##*FvwmIconMan: Font "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso10646-1"
+*FvwmIconMan: ManagerGeometry 1x0-0+122
+##*FvwmIconMan: ButtonGeometry 119x0
+### Show just the window title in buttons.
+*FvwmIconMan: Format "%t"
+### Button Colors on the format ButtonKind State foreground background
+### See "man fvwmiconman" for more details.
+##*FvwmIconMan: FocusButton Down black gray
+##*FvwmIconMan: PlainButton Up black gray
+##*FvwmIconMan: IconButton Up black gray
+##*FvwmIconMan: SelectButton Down black gray
+##*FvwmIconMan: IconAndSelectButton Down black gray
+##*FvwmIconMan: FocusAndSelectButton Down black gray
+### Left-click deiconifies but it also raises and focuses
+### an uniconified window. Right click and middle click will
+### iconify or de-iconify.
+##*FvwmIconMan: Action Mouse 1 N SendCommand Raise-and-Focus
+##*FvwmIconMan: Sort Id
+### Show windows from all desktops at all times.
+*FvwmIconMan: Resolution Global
+*FvwmIconMan: DrawIcons True
+
+
+########################## Window-Lister ###############################
+*FvwmWinList: Back DarkOliveGreen
+*FvwmWinList: Fore PaleGoldenRod
+*FvwmWinList: Font -*-new century schoolbook-bold-r-*-*-*-120-*-*-*-*-*-*
+*FvwmWinList: Action Click1 Function MoveToDesk
+*FvwmWinList: Action Click2 Iconify
+*FvwmWinList: Action Click3 Module FvwmIdent
+*FvwmWinList: UseSkipList
+*FvwmWinList: UseIconNames
+*FvwmWinList: Geometry -50-85
+*FvwmWinList: MinWidth 70
+*FvwmWinList: MaxWidth 120
+# I prefer the text centered
+#*FvwmWinList: LeftJustify
+# I like it anchored
+#*FvwmWinList: NoAnchor
+# A flat list in most recently focused order
+*FvwmWinList: FollowWindowList
+#*FvwmWinList: BorderReliefWidth 0
+# pretend to be a taskbar
+*FvwmWinList: NoIconAction SendToModule FvwmAnimate animate
 
 #######
 # 6: Window Decor
@@ -713,9 +776,9 @@ DestroyModuleConfig RightPanel:*
 Test (x stalonetray) *RightPanel: (120x20, Swallow(NoClose,UseOld) \
     stalonetray 'Exec exec stalonetray --config \
     "$[FVWM_DATADIR]/default-config/.stalonetrayrc"', Frame 0)
-Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-225)), \
+#Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-225)), \
     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-205)),\
+#Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-205)),\
     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
 *RightPanel: (120x45, Swallow DateTime 'Module FvwmScript FvwmScript-DateTime',\
     Frame 0)
@@ -741,27 +804,27 @@ DestroyModuleConfig FvwmPager:*
 #
 # FvwmIconMan is a powerful tool to list and manage windows. This
 # is used as the window list in the panel or taskbar.
-DestroyModuleConfig FvwmIconMan:*
-*FvwmIconMan: UseWinList true
-*FvwmIconMan: ButtonGeometry 120x20
-*FvwmIconMan: ManagerGeometry 1x1
-*FvwmIconMan: Background #003c3c
-*FvwmIconMan: Foreground #ffffff
-*FvwmIconMan: FocusColorset 11
-*FvwmIconMan: IconColorset 14
-*FvwmIconMan: FocusAndSelectColorset 12
-*FvwmIconMan: SelectColorset 12
-*FvwmIconMan: IconAndSelectColorset 12
-*FvwmIconMan: DrawIcons always
-*FvwmIconMan: ReliefThickness 0
-*FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Sans:Bold:size=8:antialias=True"
-*FvwmIconMan: Action Mouse 0 A ret
-*FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
-*FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
-*FvwmIconMan: Resolution global
-*FvwmIconMan: Tips needed
-*FvwmIconMan: Sort id
+#DestroyModuleConfig FvwmIconMan:*
+#*FvwmIconMan: UseWinList true
+#*FvwmIconMan: ButtonGeometry 120x20
+#*FvwmIconMan: ManagerGeometry 1x1
+#*FvwmIconMan: Background #003c3c
+#*FvwmIconMan: Foreground #ffffff
+#*FvwmIconMan: FocusColorset 11
+#*FvwmIconMan: IconColorset 14
+#*FvwmIconMan: FocusAndSelectColorset 12
+#*FvwmIconMan: SelectColorset 12
+#*FvwmIconMan: IconAndSelectColorset 12
+#*FvwmIconMan: DrawIcons always
+#*FvwmIconMan: ReliefThickness 0
+#*FvwmIconMan: Format "%t"
+#*FvwmIconMan: Font "xft:Sans:Bold:size=8:antialias=True"
+#*FvwmIconMan: Action Mouse 0 A ret
+#*FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
+#*FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
+#*FvwmIconMan: Resolution global
+#*FvwmIconMan: Tips needed
+#*FvwmIconMan: Sort id
 
 # FvwmEvent
 #

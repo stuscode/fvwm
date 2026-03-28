@@ -58,6 +58,8 @@ AddToFunc   BrowserChangeName
 + I ThisWindow ("Brave-browser") BrowserUseName
 + I ThisWindow ("Google-chrome") BrowserUseName
 
+#TODO: pass windowid as argument: BrowserUseName ThisWindow
+#WindowId $0  or just use $0 instead of $[w.id]
 DestroyFunc BrowserUseName
 AddToFunc   BrowserUseName
 + I Echo BrowserUseName $[w.id] $[w.iconname] $[browsername-$[w.id]]
@@ -103,3 +105,8 @@ AddtoFunc Forcewindowhere
 + I Schedule 800 MoveWindowLoc $[w.id] $[desk.n] $[page.nx] $[page.ny] $[monitor.current]
 
 Style firefox InitialMapCommand Forcewindowhere
+
+DestroyFunc RestartRenameBrowsers
+AddtoFunc RestartRenameBrowsers
++ I Echo "go through list of browsers and change names and icon names"
+#for each windoid: BrowserUseName windowid 

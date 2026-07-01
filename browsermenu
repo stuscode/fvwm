@@ -54,20 +54,21 @@ DestroyModuleConfig EventNameBrowser:*
 DestroyFunc BrowserChangeName
 AddToFunc   BrowserChangeName
 + I Echo BrowserChangeName $[w.id] $[w.iconname] $[browsername-$[w.id]]
-+ I ThisWindow ("firefox") BrowserUseName
-+ I ThisWindow ("Brave-browser") BrowserUseName
-+ I ThisWindow ("Google-chrome") BrowserUseName
++ I ThisWindow ("firefox") BrowserUseName $[w.id]
++ I ThisWindow ("Brave-browser") BrowserUseName $[w.id]
++ I ThisWindow ("Google-chrome") BrowserUseName $[w.id]
 
 #TODO: pass windowid as argument: BrowserUseName ThisWindow
 #WindowId $0  or just use $0 instead of $[w.id]
 DestroyFunc BrowserUseName
 AddToFunc   BrowserUseName
-+ I Echo BrowserUseName $[w.id] $[w.iconname] $[browsername-$[w.id]]
++ I Echo BrowserUseName $[0] $[w.iconname] $[browsername-$[0]]
 #Make sure infostore has the info for this window
-+ I Test (!EnvIsSet browsername-$[w.id]) Break
-+ I Echo BrowserUseName2 $[w.id] $[w.iconname] $[browsername-$[w.id]]
-+ I WindowStyle TitleFormat %c $[browsername-$[w.id]]
-+ I WindowStyle IconTitleFormat %c $[browsername-$[w.id]]
++ I Test (!EnvIsSet browsername-$[0]) Break
++ I Echo BrowserUseName2 $[0] $[w.iconname] $[browsername-$[0]]
++ I Focus $[0]
++ I WindowStyle TitleFormat %c $[browsername-$[0]]
++ I WindowStyle IconTitleFormat %c $[browsername-$[0]]
 
 DestroyFunc BrowserDeleteName
 AddToFunc   BrowserDeleteName

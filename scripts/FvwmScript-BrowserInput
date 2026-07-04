@@ -1,0 +1,55 @@
+#from ai... fix up
+
+Script FvwmScript-TextInput
+WPosition 300 150
+WSize 300 150
+WindowTitle "Variable Tracker Dialog"
+Font "fixed"
+
+# 1. Declare variables at the top of the script
+Init
+Begin
+  Set $MY_VAR = "InitialValue"
+End
+
+# Text Display Widget (Widget 1 - Shows current variable state)
+Widget 1
+Property
+  Type Text
+  Size 280 25
+  Position 10 10
+  # Displays the initial value of $MY_VAR
+  Title "Current Variable: InitialValue"
+End
+
+# Input Text Field (Widget 2)
+Widget 2
+Property
+  Type TextField
+  Size 280 30
+  Position 10 40
+  Title "Enter new variable text:"
+End
+
+# Update & Submit Button (Widget 3)
+Widget 3
+Property
+  Type ItemDraw
+  Size 120 30
+  Position 90 90
+  Title "Apply & Submit"
+Main
+  Case message of
+    SingleClic :
+    Begin
+      # 2. Update the variable with the user's input
+      Set $MY_VAR = (GetCurrentProperty 2 text)
+      
+      # 3. Display the updated variable to the user in Widget 1
+      ChangeTitle 1 "Current Variable: "$MY_VAR
+      
+      # 4. Pass the variable directly to your FVWM function
+      SendToModule FvwmScript-TextInput SendText 3 "MyCustomFunction \""$MY_VAR"\""
+      Quit
+    End
+  End

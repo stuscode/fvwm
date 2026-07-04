@@ -103,23 +103,28 @@ def buildgui(basedir, browsers):
 #  BRM_browsername
 def fvwmmenu(basedir, browsers):
    print("DestroyModuleConfig  FvwmForm-BrowserProfile: *")
+   print("*FvwmForm-BrowserProfile: GrabFocus")
    print("*FvwmForm-BrowserProfile: WarpPointer")
    print("*FvwmForm-BrowserProfile: Line         center")
    print("*FvwmForm-BrowserProfile: Text         \"create new browser profile\"")
    print("*FvwmForm-BrowserProfile: Line         center")
-   print("*FvwmForm-BrowserProfile: Text         \"Browser: $(BROWSER)\"")
+   print("*FvwmForm-BrowserProfile: Text         \"Browser: $BROWSER\"")
    print("*FvwmForm-BrowserProfile: Line         center")
    print("*FvwmForm-BrowserProfile: Text         \"Profile:\"")
-   print("*FvwmForm-BrowserProfile: Input        BRM_Profile        20      \"\"")
-#   print("*FvwmFormBrowserProfile: Button       quit    \"Login\"         ^M")
-   print("*FvwmForm-BrowserProfile: Command      LaunchWeb $(BROWSER) $(BRM_Profile) keep")
+   print("*FvwmForm-BrowserProfile: Input        BRMProfile        20  \"\"")
+   print("*FvwmForm-BrowserProfile: Line         expand")
+   print("*FvwmForm-BrowserProfile: Button       quit    \"Go\"         ^M")
+   print("*FvwmForm-BrowserProfile: Command      Function LaunchWeb  $BROWSER $BRMProfile  keep")
+   print("*FvwmForm-BrowserProfile: Button       quit    \"Cancel\"   ^R")
+   print("*FvwmForm-BrowserProfile: Command      Nop")
    #print("*FvwmForm-BrowserProfile: Command      Exec exec ssh $(Custom?-l $(UserName)) $(HostName) xterm -T x")
 #   print("DestroyFunction BRM_NewProfile")
 #   print("AddToFunction BRM_NewProfile")
 #   print("+ I setEnv BRM_BrowserName $0")
 #   print("+ I Module FvwmForm BrowserProfile")
+   print()
    print("DestroyMenu \"BrowserMenu\"")
-   print("AddToyMenu \"BrowserMenu\" \"Browsers\" Title")
+   print("AddToMenu \"BrowserMenu\" \"Browsers\" Title")
    for b in browsers:
       popupname = "BRM_"+b.name+"_keep"
       print(f"+ \"{b.name}\" Popup \"{popupname}\"")
@@ -130,8 +135,10 @@ def fvwmmenu(basedir, browsers):
       print(f"DestroyMenu \"{popupname}\"")
       print(f"AddToMenu \"{popupname}\" \"{b.name}\" Title")
       for p in b.list:
-         print(f"+ \"{p}\" Exec Exec LaunchWeb {b.name} \"{p}\" keep") #TODO: finish this
+         print(f"+ \"{p}\" Function LaunchWeb {b.name} \"{p}\" keep") #TODO: finish this
+      print(f"+ \"New\" Module FvwmForm FvwmForm-BrowserProfile BROWSER=\"{b.name}\"")
       print(f"+ \"With New Profile\" Popup \"BRM_{b.name}_erase\" ")
+      print()
    # make erase menus, same as main but with erase in place of keep
    # TODO: eventually make keep or erase a parameter
    for b in browsers:
@@ -139,8 +146,8 @@ def fvwmmenu(basedir, browsers):
       print(f"DestroyMenu \"{popupname}\"")
       print(f"AddToMenu \"{popupname}\" \"{b.name}\" Title")
       for p in b.list:
-         print(f"+ \"{p}\" Exec Exec LaunchWeb {b.name} \"{p}\" erase") #TODO: finish this
-      print("+ \"New\" Module FvwmForm BROWSER=b.name")
+         print(f"+ \"{p}\" Function LaunchWeb {b.name} \"{p}\" erase") #TODO: finish this
+      print()
             
 #main
 def main():

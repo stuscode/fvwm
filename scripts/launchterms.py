@@ -5,27 +5,30 @@ import subprocess
 import sys
 from tkinter import filedialog
 
-DEFAULTPATH = "~/SyncDir/software"
+PATH = "~/SyncDir/software"
+NUMTERMS = 3
 
 if len(sys.argv) > 1:
-   path = sys.argv[1]
-else:
-   path = DEFAULTPATH
-directory = os.path.expanduser(path)
+   PATH = sys.argv[1]
+if len(sys.argv) > 2:
+   NUMTERMS = int(sys.argv[2])
+
+directory = os.path.expanduser(PATH)
 try:
    os.chdir(directory)
 except:
    print("Couldn't chdir to: ",directory)
-directory = filedialog.askdirectory()
+if len(sys.argv) < 2:
+   directory = filedialog.askdirectory()
 if len(directory) > 0:
    try:
       os.chdir(directory) 
    except:
       print("Couldn't chdir to selected: ",directory)
-   subprocess.Popen(['xterm', '-geometry', '80x79+0+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+494+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+988+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+1482+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+1976+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+2470+0'])
-   subprocess.Popen(['xterm', '-geometry', '80x79+2964+0'])
+   for i in range(NUMTERMS):
+      xpos = i * 494
+      position = f"80x79+{xpos}+0"
+      subprocess.Popen(['xterm', '-geometry', position])
+#   subprocess.Popen(['xterm', '-geometry', '80x79+0+0'])
+#   subprocess.Popen(['xterm', '-geometry', '80x79+494+0'])
+#   subprocess.Popen(['xterm', '-geometry', '80x79+988+0'])

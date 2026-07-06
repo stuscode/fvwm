@@ -1,55 +1,84 @@
-#from ai... fix up
-
-Script FvwmScript-TextInput
-WPosition 300 150
-WSize 300 150
-WindowTitle "Variable Tracker Dialog"
-Font "fixed"
-
-# 1. Declare variables at the top of the script
+WindowTitle {BrowserInput}
+WindowSize  250 120
+Font "xft:Sans:style=Bold:size=10"
 Init
-Begin
-  Set $MY_VAR = "InitialValue"
-End
+ Begin
+ End
 
-# Text Display Widget (Widget 1 - Shows current variable state)
 Widget 1
 Property
-  Type Text
-  Size 280 25
-  Position 10 10
-  # Displays the initial value of $MY_VAR
-  Title "Current Variable: InitialValue"
+ Title {Enter Profile Name to Create}
+ Size  200 30
+ Position 25 0
+ Type ItemDraw
+ Flags NoReliefString
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
 End
 
-# Input Text Field (Widget 2)
 Widget 2
 Property
-  Type TextField
-  Size 280 30
-  Position 10 40
-  Title "Enter new variable text:"
+ Title {}
+ Size 80 28
+ Position 43 40
+ Type TextField
+Main
+ Case message of
+  SingleClic :
+  Begin
+#   Do {Quit}
+  End
 End
 
-# Update & Submit Button (Widget 3)
 Widget 3
 Property
-  Type ItemDraw
-  Size 120 30
-  Position 90 90
-  Title "Apply & Submit"
+ Title {Cancel}
+ Size 60 28
+ Position 43 80
+ Flags NoReliefString
+ Type PushButton
+ Value 1
 Main
-  Case message of
-    SingleClic :
-    Begin
-      # 2. Update the variable with the user's input
-      Set $MY_VAR = (GetCurrentProperty 2 text)
-      
-      # 3. Display the updated variable to the user in Widget 1
-      ChangeTitle 1 "Current Variable: "$MY_VAR
-      
-      # 4. Pass the variable directly to your FVWM function
-      SendToModule FvwmScript-TextInput SendText 3 "MyCustomFunction \""$MY_VAR"\""
-      Quit
-    End
+ Case message of
+  SingleClic :
+  Begin
+   Quit
   End
+End
+
+Widget 4
+Property
+ Title {Apply}
+ Size 60 28
+ Position 147 80
+ Flags NoReliefString
+ Type PushButton
+ Value 1
+Main
+ Case message of
+  SingleClic :
+  Begin
+   Set $bname = (GetTitle 2)
+   Do {Function BRM_StartNew } $bname
+#Evidently sending a string to expr is not possible, though ai says it will work
+#   SendToModule FvwmScript-TextInput SendText 3 "BRM_StartNew \""$MY_VAR"\""
+#   Set $bname = (GetTitle 2)
+#   Set $def = "default"
+#   Set $length = (GetOutput {expr length "$bname"} 1 0)
+#   Set $length = (GetOutput {echo $(expr length "$bname")} 1)
+#   If $length == {0} Then
+#    Begin
+#     Do {Function BRM_StartNew } $length
+#     Do {Function BRM_StartNew } "default1"
+#     Do {Function BRM_StartNew }(GetTitle 2)
+#    End
+#   Else
+#    Begin
+#     Do {Function BRM_StartNew } $length
+#     Do {Function BRM_StartNew } {"default"}
+   Quit
+  End
+End

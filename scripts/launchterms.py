@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#launchterms.py [numterms [path]]
 
 import os
 import subprocess
@@ -9,17 +10,17 @@ PATH = "~/SyncDir/software"
 NUMTERMS = 3
 
 if len(sys.argv) > 1:
-   PATH = sys.argv[1]
+   NUMTERMS = int(sys.argv[1])
 if len(sys.argv) > 2:
-   NUMTERMS = int(sys.argv[2])
+   PATH = sys.argv[2]
 
+if len(sys.argv) < 3:
+   PATH = filedialog.askdirectory()
 directory = os.path.expanduser(PATH)
 try:
    os.chdir(directory)
 except:
    print("Couldn't chdir to: ",directory)
-if len(sys.argv) < 2:
-   directory = filedialog.askdirectory()
 if len(directory) > 0:
    try:
       os.chdir(directory) 

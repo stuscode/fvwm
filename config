@@ -96,13 +96,16 @@ AddToFunc   ExitFunction
 + I Test (ToRestart) Exec exec $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 + I Test (ToRestart) Echo $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 
+Style "xtermStart1" StartsOnPage 1 0 0
+Style "xtermStart2" StartsOnPage 1 1 1
+Style "xtermStart1" SkipMapping
+Style "xtermStart2" SkipMapping
 DestroyFunc StartProgsOnInit
 AddToFunc StartProgsOnInit
-+ I GotoDeskAndPage 1 0 0
-+ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch] "~/SyncDir/Software"
-+ I GotoDeskAndPage 1 1 1
-+ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch] "~/.fvwm"
-+ I GotoDeskAndPage 0 0 0 
++ I Echo StartProgsOnInit $[infostore.numtermslaunch]
++ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart1" -n $[infostore.numtermslaunch] -d "~/.fvwm"
++ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.numtermslaunch] -d $[infostore.terms2loc]
+#+ I Test (EnvMatch terms2loc *) Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.numtermslaunch] -d $[infostore.terms2loc]
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX

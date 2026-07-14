@@ -23,6 +23,7 @@
 
 Read custom
 Read browsermenu
+Read localsettings
 
 # InfoStoreAdd can be used to store variable data internal to fvwm.
 # The variable can then be used in the configuration as $[infostore.name].
@@ -97,11 +98,11 @@ AddToFunc   ExitFunction
 
 DestroyFunc StartProgsOnInit
 AddToFunc StartProgsOnInit
-+ I GotoPage 0 1
-+ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n 6 "~/SyncDir/Software"
-+ I GotoPage 1 1
-+ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n 6 "~/.fvwm"
-+ I GotoPage 0 0 
++ I GotoDeskAndPage 1 0 0
++ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch] "~/SyncDir/Software"
++ I GotoDeskAndPage 1 1 1
++ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch] "~/.fvwm"
++ I GotoDeskAndPage 0 0 0 
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -440,7 +441,7 @@ AddToMenu   MenuPrograms "Programs" Title
 + "clippy common" Exec exec /usr/local/bin/tkclippy /main/SyncDir/share/clippy/common
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py -n 6
++ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch]
 + "MSmove" Exec exec /usr/local/bin/msmove ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "gromit-mpx" Exec exec gromit-mpx

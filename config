@@ -51,6 +51,9 @@ InfoStoreAdd envloc $[HOME]/.fvwm/envsave
 #   + M [Action to do on a Mouse Motion]
 ###########
 
+BugOpts ExplainWindowPlacement On
+###Exec exec /usr/bin/pkill -USR2 fvwm3 
+
 # Start Function
 #
 # The start function is run right after fvwm is done reading
@@ -75,12 +78,14 @@ AddToFunc   StartFunction
 + I InitDeskColors  #set the colors
 + I CreatePermSwitchPanel
 + I Test (Init) Exec exec /usr/bin/asclock -position -0+148
++ I Test (Init) Function StartProgsOnInit
+# set up some programming windows
 #+ I Test (Init) Exec exec /usr/local/bin/msmove -i -position -0+300
 
 DestroyFunc RestartFunction
 AddToFunc   RestartFunction
-+ I Exec exec /usr/bin/pkill -USR2 fvwm3 
-+ I PipeRead '$[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]'
+#+ I Exec exec /usr/bin/pkill -USR2 fvwm3 
++ I Schedule 100 PipeRead '$[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]'
 + I Echo $[HOME]/.fvwm/scripts/loadEnv.py $[infostore.envloc]
 + I RestartRenameBrowsers
 
@@ -90,6 +95,13 @@ AddToFunc   ExitFunction
 + I Test (ToRestart) Exec exec $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 + I Test (ToRestart) Echo $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 
+DestroyFunc StartProgsOnInit
+AddToFunc StartProgsOnInit
++ I GotoPage 0 1
++ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n 6 "~/SyncDir/Software"
++ I GotoPage 1 1
++ I Exec ${HOME}/.fvwm/scripts/launchterms.py -n 6 "~/.fvwm"
++ I GotoPage 0 0 
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -155,6 +167,7 @@ AddToFunc   IconManClick
 + I ThisWindow Raise
 + I ThisWindow (AcceptsFocus) FlipFocus
 
+
 # Function: ToggleTitle
 #
 # This function will toggle if fvwm shows the TitleBar.
@@ -207,6 +220,8 @@ AddToFunc InitDeskColors
 # 2: Styles #
 #############
 
+##Style *term* SkipMapping
+
 # Desktops and Pages
 #
 # Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
@@ -258,7 +273,11 @@ DefaultFont "xft:Sans:Bold:size=8:antialias=True"
 
 # Window Placement
 #Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
-Style * PositionPlacement UnderMouse, GrabFocusOff, !UsePPosition
+#Style * PositionPlacement UnderMouse, GrabFocusOff, !UsePPosition
+Style * GrabFocusOff, !UsePPosition
+Style * !FPGrabFocus, !FPGrabFocusTransient, OverrideGrabFocus
+Style *VirtualBox* !UsePPosition !UseUSPosition
+Style *VirtualBox* InitialMapCommand Forcewindowhere
 
 # Sets all windows to OpaqueMove (vs a wired frame) and  windows will
 # snap to each other and the edge of the screen.
@@ -353,8 +372,11 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 + "&Programs%icons/programs.png%" Popup MenuPrograms
 + "XDG &Menu%icons/apps.png%" Popup XDGMenu
 + "&XTerm%icons/terminal.png%" Exec exec $[infostore.terminal]
++ "copy primary" Exec exec ${HOME}/.fvwm/scripts/cpbdtoshare.py
++ "suspend dns filter" Exec exec ${HOME}/SyncDir/software/dns/stopblock.sh
 + "Gnome Terminal" Exec exec gnome-terminal
 #+ "&Firefox" Popup MenuFirefox
++ "Browsers" Popup BrowserMenu
 + "&NS Firefox" Popup MenuNameNSFirefox
 + "&NS Chrome" Popup MenuNameNSChrome
 + "&NS Brave" Popup MenuNameNSBrave
@@ -375,6 +397,8 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 
 # Generate XDGMenu
 PipeRead "fvwm-menu-desktop -e"
+
+PipeRead "$[HOME]/.fvwm/scripts/generate-browsermenu.py -f ~/ssd/browserdirs"
 
 #Shutdown Confirmation menu
 
@@ -411,10 +435,12 @@ AddToMenu   MenuPrograms "Programs" Title
 #+ "Files: thunar" Exec exec thunar
 #+ "Files: krusader" Exec exec krusader
 + "File Manager pcmanfm" Exec exec pcmanfm
++ "Photo viewer qimgv" Exec exec qimgv
 + "backintime" Exec exec /usr/bin/backintime-qt
++ "clippy common" Exec exec /usr/local/bin/tkclippy /main/SyncDir/share/clippy/common
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py
++ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py -n 6
 + "MSmove" Exec exec /usr/local/bin/msmove ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "gromit-mpx" Exec exec gromit-mpx
@@ -622,7 +648,7 @@ Mouse 3	R    N Menu MenuFvwmRoot
 Mouse 2	R    N WindowList 
 Mouse 2	R    C WindowList Function MoveToCurrent
 #Mouse 2	R    C Module FvwmWinList -Transient
-Mouse 2	R    C Module FvwmIconMan -Transient
+Mouse 2	R    S Module FvwmIconMan -Transient
 Mouse 1	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps

@@ -102,6 +102,7 @@ def buildgui(basedir, browsers):
 #  BRM_browsername
 #  BRM_browsername
 def fvwmmenu(basedir, browsers):
+   print(f"InfoStoreAdd browserbasedir {basedir}")
    print("DestroyModuleConfig  FvwmForm-BrowserProfile: *")
    print("*FvwmForm-BrowserProfile: GrabFocus")
    print("*FvwmForm-BrowserProfile: WarpPointer")

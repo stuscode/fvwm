@@ -1,2 +1,3 @@
-InfoStoreAdd numtermslaunch 3
+InfoStoreAdd termsnum 3
+InfoStoreAdd termssize "80x79"
 InfoStoreAdd terms2loc "~/software"

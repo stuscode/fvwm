@@ -12,9 +12,11 @@ from tkinter import filedialog
 #path will change path to specified instead of default
 
 DEFAULTNUM = "3" #is a string for argument, gets converted same as
+DEFAULTSIZE = "80x79"
 
 p = argparse.ArgumentParser("launch group of xterms in specified directory")
 p.add_argument("-n", "--numterms", help="number of terminals to launch", default=DEFAULTNUM)
+p.add_argument("-s", "--size", help="size of terminal, CHARxROW", default=DEFAULTSIZE)
 p.add_argument("-i", "--initialdir", help="initial directory for selector")
 p.add_argument("-xrm", "--xrmstring", help="x resource string for xterms. usually 'Page:desk p_off_x p_off_y'")
 p.add_argument("-r", "--resourcename", help="resource name")
@@ -34,7 +36,7 @@ except:
    print("Couldn't chdir to directory: ",directory)
 for i in range(int(args.numterms)):
    xpos = i * 494
-   position = f"80x79+{xpos}+0"
+   position = f"{args.size}+{xpos}+0"
    execargs = ['xterm', '-geometry', position]
    if args.xrmstring != None:
       execargs.append('-xrm')

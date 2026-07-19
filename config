@@ -102,10 +102,10 @@ Style "xtermStart1" SkipMapping
 Style "xtermStart2" SkipMapping
 DestroyFunc StartProgsOnInit
 AddToFunc StartProgsOnInit
-+ I Echo StartProgsOnInit $[infostore.numtermslaunch]
-+ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart1" -n $[infostore.numtermslaunch] -d "~/.fvwm"
-+ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.numtermslaunch] -d $[infostore.terms2loc]
-#+ I Test (EnvMatch terms2loc *) Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.numtermslaunch] -d $[infostore.terms2loc]
+#+ I Echo StartProgsOnInit $[infostore.termsnum] $[infostore.termssize]
++ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart1" -n $[infostore.termsnum] -s $[infostore.termssize] -d "~/.fvwm"
++ I Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.termsnum] -s $[infostore.termssize] -d $[infostore.terms2loc]
+#+ I Test (EnvMatch terms2loc *) Exec exec ${HOME}/.fvwm/scripts/launchterms.py -r "xtermStart2" -n $[infostore.termsnum] -s $[infostore.termssize] -d $[infostore.terms2loc]
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -444,7 +444,7 @@ AddToMenu   MenuPrograms "Programs" Title
 + "clippy common" Exec exec /usr/local/bin/tkclippy /main/SyncDir/share/clippy/common
 + "Volume Control" Exec exec pavucontrol
 + "" Nop
-+ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.numtermslaunch]
++ "Programming" Exec exec ${HOME}/.fvwm/scripts/launchterms.py -n $[infostore.termsnum] -s $[infostore.termssize]
 + "MSmove" Exec exec /usr/local/bin/msmove ${HOME}/Downloads ${HOME}/SyncDir/Finance/statements
 + "twiki" Exec exec xterm -T tiddlywiki -e /bin/bash -ci twiki
 + "gromit-mpx" Exec exec gromit-mpx

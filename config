@@ -53,7 +53,7 @@ InfoStoreAdd envloc $[HOME]/.fvwm/envsave
 ###########
 
 BugOpts ExplainWindowPlacement On
-###Exec exec /usr/bin/pkill -USR2 fvwm3 
+Exec exec /usr/bin/pkill -USR2 fvwm3 
 
 # Start Function
 #
@@ -76,8 +76,9 @@ AddToFunc   StartFunction
 #+ I Module FvwmButtons RightPanel
 + I Module FvwmEvent EventNewDesk
 + I Module FvwmEvent EventNameBrowser
-+ I InitDeskColors  #set the colors
-+ I CreatePermSwitchPanel
+#
+#xrandr this per monitor
++ I PipeRead 'xrandr --listmonitors | sed -e 1d -e \'s/.* //\' | while IFS= read -r mon; do echo "CreatePermSwitchPanel $mon"; done'
 + I Test (Init) Exec exec /usr/bin/asclock -position -0+148
 + I Test (Init) Function StartProgsOnInit
 # set up some programming windows
@@ -183,40 +184,29 @@ AddToFunc   ToggleTitle
 + I WindowStyle !Title
 + I State 1 True
 
+#Function: SetSwitcherDesk
+# $0: desk number
+# $1: monitor name
+DestroyFunc SetSwitcherDesk
+AddToFunc SetSwitcherDesk
++ I Echo SetSwitcherDesk $0 $1
++ I SendToModule SwitcherPanel-$1 ChangeButton deskp0 Colorset 10
++ I SendToModule SwitcherPanel-$1 ChangeButton deskp1 Colorset 10
++ I SendToModule SwitcherPanel-$1 ChangeButton deskp2 Colorset 10
++ I SendToModule SwitcherPanel-$1 ChangeButton deskp3 Colorset 10
++ I SendToModule SwitcherPanel-$1 ChangeButton deskp$0 Colorset 11
++ I SendToModule PermSwitcherPanel-$1 ChangeButton deskp0 Colorset 10
++ I SendToModule PermSwitcherPanel-$1 ChangeButton deskp1 Colorset 10
++ I SendToModule PermSwitcherPanel-$1 ChangeButton deskp2 Colorset 10
++ I SendToModule PermSwitcherPanel-$1 ChangeButton deskp3 Colorset 10
++ I SendToModule PermSwitcherPanel-$1 ChangeButton deskp$0 Colorset 11
+
 # Function: ChangeDesk
 #
 # This function is called by FvwmEvent every time the Desk is changed.
 DestroyFunc ChangeDesk
 AddToFunc   ChangeDesk
-#+ I SendToModule RightPanel ChangeButton desk0 Colorset 10
-#+ I SendToModule RightPanel ChangeButton desk1 Colorset 10
-#+ I SendToModule RightPanel ChangeButton desk2 Colorset 10
-#+ I SendToModule RightPanel ChangeButton desk3 Colorset 10
-#+ I SendToModule RightPanel ChangeButton desk$0 Colorset 11
-+ I SendToModule SwitcherPanel ChangeButton deskp0 Colorset 10
-+ I SendToModule SwitcherPanel ChangeButton deskp1 Colorset 10
-+ I SendToModule SwitcherPanel ChangeButton deskp2 Colorset 10
-+ I SendToModule SwitcherPanel ChangeButton deskp3 Colorset 10
-+ I SendToModule SwitcherPanel ChangeButton deskp$0 Colorset 11
-+ I SendToModule PermSwitcherPanel ChangeButton deskp0 Colorset 10
-+ I SendToModule PermSwitcherPanel ChangeButton deskp1 Colorset 10
-+ I SendToModule PermSwitcherPanel ChangeButton deskp2 Colorset 10
-+ I SendToModule PermSwitcherPanel ChangeButton deskp3 Colorset 10
-+ I SendToModule PermSwitcherPanel ChangeButton deskp$0 Colorset 11
-+ I SetEnv colorD0 10
-+ I SetEnv colorD1 10
-+ I SetEnv colorD2 10
-+ I SetEnv colorD3 10
-+ I SetEnv colorD$0 11
-
-#This is created in the per screen custom config files
-#At first we are on screen 0
-DestroyFunc InitDeskColors
-AddToFunc InitDeskColors
-+ I SetEnv colorD0 11
-+ I SetEnv colorD1 10
-+ I SetEnv colorD2 10
-+ I SetEnv colorD3 10
++ I SetSwitcherDesk $0 $[monitor.current]
 
 
 
@@ -238,6 +228,9 @@ AddToFunc InitDeskColors
 #   |   |   |
 #   +---+---+
 #
+# xrandr --listmonitors | sed -e 1d -e 's/.* //'
+#DesktopConfiguration global
+DesktopConfiguration per-monitor
 DesktopName 0 Main
 DesktopName 1 Desk1
 DesktopName 2 Desk2
@@ -385,8 +378,9 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 + "&NS Chrome" Popup MenuNameNSChrome
 + "&NS Brave" Popup MenuNameNSBrave
 + "" Nop
-+ "SwitchPanel" CreateSwitchPanel
++ "SwitchPanel" CreateLocalSwitchPanel
 + "AllDesktop" Module FvwmPager 0 3
+#+ "AllDesktop" Module FvwmPager * * *
 + "Fvwm&Console%icons/terminal.png%" Module FvwmConsole -terminal $[infostore.terminal]
 + "&Wallpapers%icons/wallpaper.png%" Popup BGMenu
 + "M&an Pages%icons/help.png%" Popup MenuFvwmManPages
@@ -829,6 +823,10 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: BallonYOffset +2
 *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
+#for per-monitor configuration
+*FvwmPager: IsShared
+*FvwmPager: MonitorLabels
+*FvwmPager: CurrentDeskPerMonitor
 
 # FvwmIconMan
 #

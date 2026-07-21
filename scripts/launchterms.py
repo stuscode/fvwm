@@ -35,7 +35,7 @@ try: #if dir is empty, will start in cwd
 except:
    print("Couldn't chdir to directory: ",directory)
 for i in range(int(args.numterms)):
-   xpos = i * 494
+   xpos = i * 494 #6 pixels wide per character plus 14
    position = f"{args.size}+{xpos}+0"
    execargs = ['xterm', '-geometry', position]
    if args.xrmstring != None:

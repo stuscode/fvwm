@@ -27,8 +27,11 @@ Silent Key Control_L R N CreateSwitchPanel
 ####+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
 #page and desktop switcher
-Style SwitcherPanel sticky
-Style PermSwitcherPanel sticky
+#TODO xrandr this per monitor
+Style SwitcherPanel-eDP-1 sticky
+Style SwitcherPanel-HDMI-1 sticky
+Style PermSwitcherPanel-eDP-1 sticky
+Style PermSwitcherPanel-HDMI-1 sticky
 #Style firefox !UsePPosition !UseUSPosition
 #Style *Firefox* InitialMapCommand MoveToDesk 0 $[desk.n]
 ####Style *Firefox* InitialMapCommand Forcewindowhere $[w.id] $[desk.n] $[page.nx] $[page.ny]
@@ -42,55 +45,69 @@ Style SwitcherPanel ManualPlacement
 #Specific window options
 Style asclock NoTitle, Sticky
 
-DestroyModuleConfig SWPager
-#*SWPager: NoSeparators
+DestroyFunc CreateLocalSwitchPanel
+AddToFunc   CreateLocalSwitchPanel
++ I CreateSwitchPanel $[monitor.current]
 
 DestroyFunc CreateSwitchPanel
 AddToFunc   CreateSwitchPanel
-#+ I KillModule FvwmPager SWPager
-+ I KillModule FvwmButtons SwitcherPanel
-#+ I KillModule FvwmPager
-+ I DestroyModuleConfig SwitcherPanel:*
-+ I *SwitcherPanel: Geometry 120x120+$[pointer.x]+$[pointer.y]
-+ I *SwitcherPanel: Colorset 10
-+ I *SwitcherPanel: Columns 120
-+ I *SwitcherPanel: Rows 110
-+ I *SwitcherPanel: Frame 0
-+ I *SwitcherPanel: (120x5, Frame 0)
-+ I *SwitcherPanel: (10x20, Frame 0)
-+ I *SwitcherPanel: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset $[colorD0], ActiveColorset 12, Frame 0)
-+ I *SwitcherPanel: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset $[colorD1], ActiveColorset 12, Frame 0)
-+ I *SwitcherPanel: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset $[colorD2], ActiveColorset 12, Frame 0)
-+ I *SwitcherPanel: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset $[colorD3], ActiveColorset 12, Frame 0)
-+ I *SwitcherPanel: (10x20, Frame 0)
-+ I *SwitcherPanel: (5x80, Frame 0)
-+ I *SwitcherPanel: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) SWPager 'Module FvwmPager SWPager *' , Frame 0)
-+ I *SwitcherPanel: (5x80, Frame 0)
-+ I *SwitcherPanel: (120x5, Frame 0)
-+ I Module FvwmButtons SwitcherPanel
++ I Echo CreateSwitchPanel $0
++ I DestroyModuleConfig SWPager-$0
++ I *SWPager-$0: IsShared
++ I *SWPager-$0: MonitorLabels
++ I *SWPager-$0: CurrentDeskPerMonitor
++ I *SWPager-$0: Monitor $0
++ I KillModule FvwmButtons SwitcherPanel-$0
++ I DestroyModuleConfig SwitcherPanel-$0:*
++ I *SwitcherPanel-$0: Geometry 120x120+$[pointer.x]+$[pointer.y]
+##+ I *SwitcherPanel-$0: Geometry 120x120-0+0@$0
++ I *SwitcherPanel-$0: Colorset 10
++ I *SwitcherPanel-$0: Columns 120
++ I *SwitcherPanel-$0: Rows 110
++ I *SwitcherPanel-$0: Frame 0
++ I *SwitcherPanel-$0: (120x5, Frame 0)
++ I *SwitcherPanel-$0: (10x20, Frame 0)
++ I *SwitcherPanel-$0: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset 10, ActiveColorset 12, Frame 0)
++ I *SwitcherPanel-$0: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset 10, ActiveColorset 12, Frame 0)
++ I *SwitcherPanel-$0: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset 10, ActiveColorset 12, Frame 0)
++ I *SwitcherPanel-$0: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset 10, ActiveColorset 12, Frame 0)
++ I *SwitcherPanel-$0: (10x20, Frame 0)
++ I *SwitcherPanel-$0: (5x80, Frame 0)
++ I *SwitcherPanel-$0: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) SWPager-$0 'Module FvwmPager SWPager-$0 *' , Frame 0)
++ I *SwitcherPanel-$0: (5x80, Frame 0)
++ I *SwitcherPanel-$0: (120x5, Frame 0)
++ I Module FvwmButtons SwitcherPanel-$0
++ I Schedule 1000 Function SetSwitcherDesk $[monitor.$0.desk] $0
 
 DestroyFunc CreatePermSwitchPanel
 AddToFunc   CreatePermSwitchPanel
-+ I KillModule FvwmButtons PermSwitcherPanel
-+ I DestroyModuleConfig PermSwitcherPanel:*
-+ I *PermSwitcherPanel: Geometry 120x120-0+0@g
-+ I *PermSwitcherPanel: Colorset 10
-+ I *PermSwitcherPanel: Columns 120
-+ I *PermSwitcherPanel: Rows 110
-+ I *PermSwitcherPanel: Frame 0
-#+ I *PermSwitcherPanel: Font "none"
-+ I *PermSwitcherPanel: (120x5, Frame 0)
-+ I *PermSwitcherPanel: (10x20, Frame 0)
-+ I *PermSwitcherPanel: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset $[colorD0], ActiveColorset 12, Frame 0)
-+ I *PermSwitcherPanel: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset $[colorD1], ActiveColorset 12, Frame 0)
-+ I *PermSwitcherPanel: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset $[colorD2], ActiveColorset 12, Frame 0)
-+ I *PermSwitcherPanel: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset $[colorD3], ActiveColorset 12, Frame 0)
-+ I *PermSwitcherPanel: (10x20, Frame 0)
-+ I *PermSwitcherPanel: (5x80, Frame 0)
-+ I *PermSwitcherPanel: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) SWPager 'Module FvwmPager SWPager *' , Frame 0)
-+ I *PermSwitcherPanel: (5x80, Frame 0)
-+ I *PermSwitcherPanel: (120x5, Frame 0)
-+ I Module FvwmButtons PermSwitcherPanel
++ I Echo CreatePermSwitchPanel $0
++ I DestroyModuleConfig PSWPager-$0
++ I *PSWPager-$0: IsShared
++ I *PSWPager-$0: MonitorLabels
++ I *PSWPager-$0: CurrentDeskPerMonitor
++ I *PSWPager-$0: Monitor $0
++ I KillModule FvwmButtons PermSwitcherPanel-$0
++ I DestroyModuleConfig PermSwitcherPanel-$0:*
++ I *PermSwitcherPanel-$0: Geometry 120x120-0+0@$0
++ I *PermSwitcherPanel-$0: Colorset 10
++ I *PermSwitcherPanel-$0: Columns 120
++ I *PermSwitcherPanel-$0: Rows 110
++ I *PermSwitcherPanel-$0: Frame 0
+#+ I *PermSwitcherPanel-$0: Font "none"
++ I *PermSwitcherPanel-$0: (120x5, Frame 0)
++ I *PermSwitcherPanel-$0: (10x20, Frame 0)
++ I *PermSwitcherPanel-$0: (25x20, Id deskp0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset 10, ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel-$0: (25x20, Id deskp1, Title "1", Action (Mouse 1) GotoDesk 0 1, Colorset 10, ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel-$0: (25x20, Id deskp2, Title "2", Action (Mouse 1) GotoDesk 0 2, Colorset 10, ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel-$0: (25x20, Id deskp3, Title "3", Action (Mouse 1) GotoDesk 0 3, Colorset 10, ActiveColorset 12, Frame 0)
++ I *PermSwitcherPanel-$0: (10x20, Frame 0)
++ I *PermSwitcherPanel-$0: (5x80, Frame 0)
++ I *PermSwitcherPanel-$0: (110x80, Swallow (Close, NoHints, NoKill, NoRespawn, UseOld, NoTitle) PSWPager-$0 'Module FvwmPager PSWPager-$0 *' , Frame 0)
++ I *PermSwitcherPanel-$0: (5x80, Frame 0)
++ I *PermSwitcherPanel-$0: (120x5, Frame 0)
++ I Module FvwmButtons PermSwitcherPanel-$0
++ I Schedule 1000 Function SetSwitcherDesk $[monitor.$0.desk] $0
 
 #$[desk.n]
 

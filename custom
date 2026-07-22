@@ -26,6 +26,15 @@ Silent Key Control_L R N CreateSwitchPanel
 ####+ I Schedule 800 WindowId $0 MoveToDesk 0 $[desk.n]
 ####+ I Schedule 1000 GotoDesk 0 $[desk.n]
 
+#stop allowing grab of focus on initial map.  probably destrofunc is working
+#Style XTerm !FPFocusByProgram, !FPGrabFocus
+###Style XTerm InitialMapCommand GotoDesk 0 0
+Style Firefox !FPFocusByProgram, !FPGrabFocus
+#Style * !FPFocusByProgram
+DestroyFunc EWMHActivateWindowFunc
+DestroyFunc UrgencyFunc
+
+
 #page and desktop switcher
 Style SwitcherPanel sticky
 Style PermSwitcherPanel sticky
@@ -37,7 +46,6 @@ Style PermSwitcherPanel sticky
 #Style SwitcherPanel NoPPosition
 #Style SwitcherPanel NoUSPosition
 Style SwitcherPanel ManualPlacement
-#BugOpts ExplainWindowPlacement True
 
 #Specific window options
 Style asclock NoTitle, Sticky

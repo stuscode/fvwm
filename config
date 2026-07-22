@@ -96,10 +96,10 @@ AddToFunc   ExitFunction
 + I Test (ToRestart) Exec exec $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 + I Test (ToRestart) Echo $[HOME]/.fvwm/scripts/saveEnv.py $[infostore.envloc]
 
-Style "xtermStart1" StartsOnPage 1 0 0
-Style "xtermStart2" StartsOnPage 1 1 1
-Style "xtermStart1" SkipMapping
-Style "xtermStart2" SkipMapping
+Style xtermStart1 SkipMapping, StartsOnPage 1 0 0
+Style xtermStart2 SkipMapping, StartsOnPage 1 1 1
+#Style "xtermStart1" SkipMapping
+#Style "xtermStart2" SkipMapping
 DestroyFunc StartProgsOnInit
 AddToFunc StartProgsOnInit
 #+ I Echo StartProgsOnInit $[infostore.termsnum] $[infostore.termssize]

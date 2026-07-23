@@ -17,7 +17,7 @@ def new_browser(root, basedir, browser):
 #   profile = simpledialog.askstring("Input", "New Profile Name:")
    profile = NewProfileDialog(root)
    if profile.result != None:
-      launch(root, basedir, browser, profile, "keep")
+      launch(root, basedir, browser, profile.result, "keep")
 
 def handle_ctrl_c(event):
    sys.exit(0)     # Exit the Python process`
@@ -104,7 +104,7 @@ def launch(root, basedir, browser, profile, disp):
    root.withdraw()
    #root.update, root.deiconify to redisplay
    p = subprocess.Popen(clist, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-   for t in range(20):
+   for t in range(10):
       time.sleep(1)
       status = p.poll()
       if status != None:

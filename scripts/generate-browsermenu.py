@@ -14,79 +14,14 @@ from tkinter import simpledialog
 DEFAULTPATH="~/browserdirs"
 
 def new_browser(root, basedir, browser):
-#   profile = simpledialog.askstring("Input", "New Profile Name:")
-   profile = NewProfileDialog(root)
-   if profile.result != None:
-      launch(root, basedir, browser, profile, "keep")
+   profile = simpledialog.askstring("Input", "New Profile Name:")
+   launch(root, basedir, browser, profile, "keep")
 
 def handle_ctrl_c(event):
    sys.exit(0)     # Exit the Python process`
 
 def check_for_int(root):
    root.after(100, lambda: check_for_int(root))
-
-class NewProfileDialog(tk.Toplevel):
-    def __init__(self, parent, title="New Profile"):
-        super().__init__(parent)
-        self.transient(parent)  # Set as transient window
-        self.title(title)
-        self.parent = parent
-        
-        # Dictionary to store the final results
-        self.result = None
-        
-        # Create form fields
-        self.setup_ui()
-        
-        # Make the dialog modal (blocks interaction with main window)
-        self.grab_set()
-        self.protocol("WM_DELETE_WINDOW", self.on_cancel)
-        self.geometry(f"+{parent.winfo_rootx() + 50}+{parent.winfo_rooty() + 50}")
-        
-        # Focus on the first input field
-        self.profile_entry.focus_set()
-        self.wait_window(self)
-
-    def setup_ui(self):
-        # Config padding
-        pad_options = {'padx': 10, 'pady': 5}
-        
-        # Field 1: Username (Text)
-        tk.Label(self, text="Select Default to edit profile prototype").grid(row=0, column=0, sticky="w", columnspan=2)
-        tk.Label(self, text="New Profile Name:").grid(row=1, column=0, sticky="e", **pad_options)
-        self.profile_entry = tk.Entry(self)
-        self.profile_entry.grid(row=1, column=1, **pad_options)
-        
-        # Button Box
-        button_frame = tk.Frame(self)
-        button_frame.grid(row=2, column=0, columnspan=2, pady=15)
-        
-        submit_btn = tk.Button(button_frame, text="New", width=10, command=self.on_submit)
-        submit_btn.grid(row=0, column=0)
-        
-        submit_btn = tk.Button(button_frame, text="Default", width=10, command=self.on_default)
-        submit_btn.grid(row=0, column=1)
-        
-        cancel_btn = tk.Button(button_frame, text="Cancel", width=10, command=self.on_cancel)
-        cancel_btn.grid(row=0, column=2)
-        
-        # Bind Enter key to submit
-        self.bind("<Return>", lambda event: self.on_submit())
-        self.bind("<Escape>", lambda event: self.on_cancel())
-
-    def on_submit(self):
-        self.result = self.profile_entry.get().strip()
-        self.grab_release()
-        self.destroy()
-
-    def on_default(self):
-        self.result="default"
-        self.grab_release()
-        self.destroy()
-
-    def on_cancel(self):
-        self.grab_release()
-        self.destroy()
 
 class browserlist:
    def __init__(self):
